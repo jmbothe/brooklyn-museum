@@ -1,0 +1,90 @@
+* {
+  box-sizing: border-box;
+  /* border: 1px solid black; */
+  color: #212121;
+  font-family: 'Assistant', sans-serif;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  min-height: 100vh;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.8rem;
+  font-weight: 600;
+}
+
+h1, h2, h3 {
+  font-family: 'Assistant', sans-serif;
+}
+
+button, input[type="submit"], select {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.page-wrapper > header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2%;
+  background-color: #FFCCBC;
+  border-bottom: 6px solid #E64A19;
+  box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  width: 100vw;
+  z-index: 1;
+}
+
+.page-wrapper > header h2 {
+  margin: 0;
+  text-align: right;
+}
+
+.page-wrapper > header a {
+  text-decoration: none;
+}
+
+.heading-logout-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 1%;
+}
+
+.heading-logout-container button {
+  padding: 2% 10%;
+  width: 60%;
+  background-color: #fff;
+  border: 1px solid #E64A19;
+  outline: none;
+  border-radius: 3px;
+}
+
+.page-wrapper > section:first-of-type {
+  margin-top: 80px;
+}
