@@ -7,7 +7,6 @@ class Browse extends Component {
   }
 
   render() { 
-
     const collectionsOptions = this.props.collections.map(item => {
       return <option key={item.id} value={item.id}>{item.name}</option>
     });

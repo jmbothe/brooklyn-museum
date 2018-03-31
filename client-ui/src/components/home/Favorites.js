@@ -1,11 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Favorites extends Component {
-  render() { 
-    return (
-      <button onClick={this.props.getFavorites}>Browse Favorites</button>
-    )
-  }
-}
- 
+const Favorites = ({ getFavorites }) =>
+  <button onClick={getFavorites}>Browse Favorites</button>
+
 export default Favorites;

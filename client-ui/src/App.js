@@ -38,7 +38,7 @@ class App extends Component {
       return response.json();
     })
     .then(body => {
-      this.setState({ collections: body.data.map(obj => pickProps(obj, ['id', 'name'])) });
+      this.setState({ collections: body.data.map(obj => pickProps(obj, 'id', 'name')) });
     })
     .catch(error => {
       alert('There was a problem initializing the app. Please try again.');
@@ -78,7 +78,7 @@ class App extends Component {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_SIGNUP_REF}${apis.F_BASE_KEY}`, {
       method: 'POST',
       body: JSON.stringify({
-        ...pickProps(newUser, ['email', 'password']),
+        ...pickProps(newUser, 'email', 'password'),
         returnSecureToken: true,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -92,7 +92,7 @@ class App extends Component {
     .then(body => {
       return fetch(`${apis.USERS_ENDPOINT}add-user/`, {
         method: 'POST',
-        body: JSON.stringify({ ...pickProps(newUser, ['fullName', 'email']) }),
+        body: JSON.stringify({ ...pickProps(newUser, 'fullName', 'email') }),
         headers: {'Content-Type': 'application/json'},
       })
     })
@@ -208,16 +208,13 @@ class App extends Component {
 
   LoginComponent = () =>
     <Login
-      currentUser={this.state.currentUser}
-      logOut={this.logOut}
-      logIn={this.logIn}
-      signUp={this.signUp}
+      {...pickProps({ ...this.state, ...this }, 'currentUser', 'logIn', 'signUp')}
     />;
 
   HomeComponent = () =>
     <Home
-      {...pickProps(this.state, ['collections', 'currentUser'])}
-      {...pickProps(this, ['logOut', 'getObjects', 'getFavorites'])}
+      {...pickProps({ ...this.state, ...this },
+        'collections', 'currentUser', 'logOut', 'getObjects', 'getFavorites', 'objects')}
     />;
 
   DetailComponent = () =>

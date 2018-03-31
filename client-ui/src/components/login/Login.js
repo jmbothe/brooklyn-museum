@@ -3,7 +3,7 @@ import {Redirect} from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 import LoginHeader from './LoginHeader';
-import PageHeader from '../pageWrapper/PageHeader';
+import PageHeader from '../PageHeader';
 
 class Login extends Component {
   state = { loginView: false };

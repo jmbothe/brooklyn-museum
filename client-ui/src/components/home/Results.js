@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
 
+import ResultCard from './ResultCard';
+
 class Results extends Component {
-  state = {}
-  render() { 
+  render() {
+    const cards = this.props.objects.map((object, index) => {
+      return (
+        <ResultCard
+          key={index}
+          setDetail={this.props.setDetail}
+          object={object}
+        />
+      );
+    })
+
     return (
-      <section>Results</section>
+      <section>
+        {cards}
+      </section>
     )
   }
 }

@@ -7,7 +7,7 @@ import Search from './Search';
 import Favorites from './Favorites';
 import Logout from './Logout';
 import Results from './Results';
-import PageHeader from '../pageWrapper/PageHeader';
+import PageHeader from '../PageHeader';
 
 class Home extends Component {
   state = { redirect: '' };
@@ -25,14 +25,14 @@ class Home extends Component {
     return (
       <section>
         <PageHeader>
-          <Logout {...pickProps(this.props, ['logOut', 'currentUser'])} />
+          <Logout {...pickProps(this.props, 'logOut', 'currentUser')} />
           <nav>
-            <Favorites {...pickProps(this.props, ['getFavorites'])} />
-            <Browse {...pickProps(this.props, ['collections', 'getObjects'])} />
-            <Search {...pickProps(this.props, ['getObjects'])} />
+            <Favorites {...pickProps(this.props, 'getFavorites')} />
+            <Browse {...pickProps(this.props, 'collections', 'getObjects')} />
+            <Search {...pickProps(this.props, 'getObjects')} />
           </nav>
         </PageHeader>
-        <Results />
+        <Results {...pickProps(this.props, 'objects')} />
       </section>
     )
   }
