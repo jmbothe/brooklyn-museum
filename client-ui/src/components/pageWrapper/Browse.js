@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 
 class Browse extends Component {
   handleChange = (e) => {
-    const queryString = `${e.target.name}=${e.target.value}`
-    this.props.getObjects(queryString, this.props.toggleRedirect);
+    const relRef = `?collection_id=${e.target.value}&limit=35`
+    this.props.getObjects(relRef);
   }
 
   render() { 
 
     const collectionsOptions = this.props.collections.map(item => {
-      return <option key={item.id} value={item.name}>{item.name}</option>
+      return <option key={item.id} value={item.id}>{item.name}</option>
     });
 
     return (
-      <select name="collections" onChange={this.handleChange}>
+      <select name="collection" onChange={this.handleChange}>
         <option value="" selected disabled hidden>Browse Collections</option>
         {collectionsOptions}
       </select>

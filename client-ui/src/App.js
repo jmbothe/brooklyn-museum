@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
+import { pickProps } from './helpers';
 import apis from './apis';
 import Detail from './components/detail/Detail';
 import Login from './components/login/Login';
@@ -37,18 +38,13 @@ class App extends Component {
       return response.json();
     })
     .then(body => {
-      this.setState({ collections: body.data.map(obj => this.pickProps(obj, ['id', 'name'])) });
+      this.setState({ collections: body.data.map(obj => pickProps(obj, ['id', 'name'])) });
     })
     .catch(error => {
       alert('There was a problem initializing the app. Please try again.');
       console.log(error);
     });
   }
-
-  pickProps = (object, properties) => properties.reduce((acc, prop) => {
-    acc[prop] = object[prop];
-    return acc;
-  }, {}); 
 
   logOut = () => {
     let currentUser = { ...this.state.currentUser };
@@ -86,7 +82,7 @@ class App extends Component {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_SIGNUP_REF}${apis.F_BASE_KEY}`, {
       method: 'POST',
       body: JSON.stringify({
-        ...this.pickProps(newUser, ['email', 'password']),
+        ...pickProps(newUser, ['email', 'password']),
         returnSecureToken: true,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -100,7 +96,7 @@ class App extends Component {
     .then(body => {
       return fetch(`${apis.USERS_ENDPOINT}add-user/`, {
         method: 'POST',
-        body: JSON.stringify({ ...this.pickProps(newUser, ['fullName', 'email']) }),
+        body: JSON.stringify({ ...pickProps(newUser, ['fullName', 'email']) }),
         headers: {'Content-Type': 'application/json'},
       })
     })
@@ -121,8 +117,8 @@ class App extends Component {
     })
   }
   
-  getObjects = (relRef, callback) => {
-    fetch(`${apis.MUSEUM_ENDPOINT}${relRef}`,{
+  getObjects = (relRef) => {
+    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
     .then(response => {
@@ -133,11 +129,7 @@ class App extends Component {
       return response.json();
     })
     .then(body => {
-      let objects = [...this.state.objects];
-      objects = body.Items;
-      this.setState({ relRef, objects },
-        () => callback ? callback('results') : undefined
-      );
+      this.setState({ relRef, objects: body.data });
     })
     .catch(error => {
       alert('There was a problem with your request. Please try again later.');
@@ -146,7 +138,7 @@ class App extends Component {
   }
 
   addFavorite = () => {
-    const favorite = {userId: this.state.currentUser.userId, itemId: this.state.detail.ObjectID};
+    const favorite = { userId: this.state.currentUser.userId, objectId: this.state.detail.id };
     
     fetch(`${apis.USERS_ENDPOINT}add-favorite/`, {
       method: 'POST',
@@ -200,10 +192,8 @@ class App extends Component {
 
   HomeComponent = () =>
     <Home
-    collections={this.state.collections}
-      currentUser={this.state.currentUser}
-      logOut={this.logOut}
-      getObjects={this.getObjects}
+      {...pickProps(this.state, ['collections', 'currentUser'])}
+      {...pickProps(this, ['logOut', 'getObjects'])}
     />;
 
   DetailComponent = () =>

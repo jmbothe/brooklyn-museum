@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {Redirect, withRouter} from 'react-router-dom';
 
-import Browse from './Browse';
-import Search from './Search';
 // import Results from './Results';
-import Favorites from './Favorites';
+import PageWrapper from '../pageWrapper/PageWrapper';
 
 class Home extends Component {
   state = { redirect: '' };
@@ -20,18 +18,11 @@ class Home extends Component {
     if (!this.props.currentUser) this.toggleRedirect('login');
 
     return (
-      <div>
-        <header>
-          <h1>Brooklyn Museum</h1>
-          <h2>Collections Explorer</h2>
-          <nav>
-            <Favorites />
-            <Browse collections={this.props.collections}/>
-            <Search />
-          </nav>
-        </header>
-        {/* <Results /> */}
-      </div>
+      <PageWrapper
+        {...this.props}
+      >
+
+      </PageWrapper>
     )
   }
 }
