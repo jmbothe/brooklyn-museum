@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import apiKeys from './apiKeys';
-
-import Results from './components/results/Results';
+import apis from './apis';
 import Detail from './components/detail/Detail';
 import Login from './components/login/Login';
 import Home from './components/home/Home';
@@ -11,35 +9,57 @@ import Home from './components/home/Home';
 import './App.css';
 import './components/login/login.css';
 import './components/home/home.css';
-import './components/results/results.css'
 import './components/detail/detail.css'
 
 class App extends Component {
   state = {
-    collectionId: 2,
+    collections: [],
     objects: [],
     detail: {},
-    Page: 1,
-    queryString: null,
-    NextPage: null,
-    PrevPage: null,
-    currentUser: null,
+    relRef: null,
+    currentUser: {
+      fullName: 'Jeff Bothe',
+      email: 'jmb@gmail.com',
+      favorites: [],
+    },
   }
 
+  componentDidMount() {
+    fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
+      headers: {
+        'api_key': `${apis.MUSEUM_KEY}`
+      }
+    })
+    .then(response => { 
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(response.status);
+      }
+      return response.json();
+    })
+    .then(body => {
+      this.setState({ collections: body.data.map(obj => this.pickProps(obj, ['id', 'name'])) });
+    })
+    .catch(error => {
+      alert('There was a problem initializing the app. Please try again.');
+      console.log(error);
+    });
+  }
+
+  pickProps = (object, properties) => properties.reduce((acc, prop) => {
+    acc[prop] = object[prop];
+    return acc;
+  }, {}); 
+
   logOut = () => {
-    let currentUser = {...this.state.currentUser};
+    let currentUser = { ...this.state.currentUser };
     currentUser = null;
-    this.setState({currentUser});
+    this.setState({ currentUser });
   }
 
   logIn = user => {
-    fetch(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${apiKeys.firebase}`, {
+    fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_LOGIN_REF}${apis.F_BASE_KEY}`, {
       method: 'POST',
-      body: JSON.stringify({
-        email: user.email,
-        password: user.password,
-        returnSecureToken: true,
-      }),
+      body: JSON.stringify({ ...user, returnSecureToken: true }),
       headers: {'Content-Type': 'application/json'},
     })
     .then(response => { 
@@ -48,14 +68,14 @@ class App extends Component {
       }
       return response.json();
     })
-    .then(body => fetch(`http://localhost:8080/users/get-user-by-email/${body.email}/`))
+    .then(({ email }) => fetch(`${apis.USERS_ENDPOINT}get-user-by-email/${email}/`))
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
         throw new Error(response.status);
       }
       return response.json();
     })
-    .then(body => this.setState({currentUser: body}))
+    .then(currentUser => this.setState({ currentUser }))
     .catch(error => {
       alert('There was a problem logging in. Please try again.');
       console.log(error);
@@ -63,11 +83,10 @@ class App extends Component {
   }
 
   signUp = newUser => {
-    fetch(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${apiKeys.firebase}`, {
+    fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_SIGNUP_REF}${apis.F_BASE_KEY}`, {
       method: 'POST',
       body: JSON.stringify({
-        email: newUser.email,
-        password: newUser.password,
+        ...this.pickProps(newUser, ['email', 'password']),
         returnSecureToken: true,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -79,13 +98,9 @@ class App extends Component {
       return response.json();
     })
     .then(body => {
-      return fetch('http://localhost:8080/users/add-user/', {
+      return fetch(`${apis.USERS_ENDPOINT}add-user/`, {
         method: 'POST',
-        body: JSON.stringify({
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          email: newUser.email,
-        }),
+        body: JSON.stringify({ ...this.pickProps(newUser, ['fullName', 'email']) }),
         headers: {'Content-Type': 'application/json'},
       })
     })
@@ -106,36 +121,34 @@ class App extends Component {
     })
   }
   
-  getObjects = (queryString, Page, callback) => {
-    fetch(`http://api.thewalters.org/v1/objects?&apikey=${apiKeys.museum}&${queryString}&page=${Page}&collectionId=2`)
-      .then(response => {
-        if (response.status < 200 || response.status >= 300) {
-          alert('No objects found based on your search criteria. Try broadening your search');
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
-      .then(body => {
-        let objects = [...this.state.objects];
-        objects = body.Items;
-        this.setState({
-          queryString,
-          objects,
-          Page: body.Page,
-          NextPage:body.NextPage,
-          PrevPage: body.PrevPage
-        }, () => callback ? callback('results') : undefined);
-      })
-      .catch(error => {
-        alert('There was a problem with your request. Please try again later.');
-        console.log(error);
-      });
+  getObjects = (relRef, callback) => {
+    fetch(`${apis.MUSEUM_ENDPOINT}${relRef}`,{
+      headers: { 'api_key': apis.MUSEUM_KEY }
+    })
+    .then(response => {
+      if (response.status < 200 || response.status >= 300) {
+        alert('No objects found based on your search criteria. Try broadening your search');
+        throw new Error(response.status);
+      }
+      return response.json();
+    })
+    .then(body => {
+      let objects = [...this.state.objects];
+      objects = body.Items;
+      this.setState({ relRef, objects },
+        () => callback ? callback('results') : undefined
+      );
+    })
+    .catch(error => {
+      alert('There was a problem with your request. Please try again later.');
+      console.log(error);
+    });
   }
 
   addFavorite = () => {
     const favorite = {userId: this.state.currentUser.userId, itemId: this.state.detail.ObjectID};
     
-    fetch('http://localhost:8080/users/add-favorite/', {
+    fetch(`${apis.USERS_ENDPOINT}add-favorite/`, {
       method: 'POST',
       body: JSON.stringify(favorite),
       headers: {'Content-Type': 'application/json'},
@@ -148,9 +161,9 @@ class App extends Component {
       return response.json();
     })
     .then(body => {
-      let currentUser = {...this.state.currentUser};
-      currentUser.favorites.push(body);
-      this.setState({currentUser});
+      const favorites = [ ...this.state.currentUser.favorites ];
+      favorites.push(body);
+      this.setState({ currentUser: { favorites }});
     })
     .catch(error => {
       alert('There was a problem adding this item to your favorites. Please try again later.');
@@ -159,17 +172,15 @@ class App extends Component {
   }
 
   removeFavorite = id => {
-    fetch(`http://localhost:8080/users/delete-favorite/${id}`, {
-      method: 'DELETE'
-    })
+    fetch(`${apis.USERS_ENDPOINT}delete-favorite/${id}`, { method: 'DELETE' })
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
         alert('There was a problem removing this item to your favorites. Please try again.');
         throw new Error(response.status);
       }
-      let currentUser = {...this.state.currentUser};
-      currentUser.favorites = currentUser.favorites.filter(item => item.favoriteId != id);
-      this.setState({currentUser});
+      const favorites = [ ...this.state.currentUser.favorites ];
+      favorites.splice(favorites.indexOf(favorites.find(obj => obj.favoriteId == id)), 0);
+      this.setState({ currentUser: { favorites } });
     })
     .catch(error => {
       alert('There was a problem removing this item to your favorites. Please try again later.');
@@ -189,23 +200,10 @@ class App extends Component {
 
   HomeComponent = () =>
     <Home
+    collections={this.state.collections}
       currentUser={this.state.currentUser}
       logOut={this.logOut}
       getObjects={this.getObjects}
-    />;
-
-  ResultsComponent = () =>
-    <Results
-      currentUser={this.state.currentUser}
-      logOut={this.logOut}
-      objects={this.state.objects}
-      setDetail={this.setDetail}
-      detail={this.state.detail}
-      page={this.state.Page}
-      getObjects={this.getObjects}
-      queryString={this.state.queryString}
-      nextPage={this.state.NextPage}
-      prevPage={this.state.PrevPage}
     />;
 
   DetailComponent = () =>
@@ -223,7 +221,6 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={this.HomeComponent}/>
           <Route exact path="/login" render={this.LoginComponent}/>
-          <Route exact path="/results" render={this.ResultsComponent} />
           <Route exact path="/detail" render={this.DetailComponent} />
         </Switch>
       </Router>

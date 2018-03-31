@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+  border: 1px solid black;
+  color: #212121;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  min-height: 100vh;
+}
+
+button, input[type="submit"], select {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
