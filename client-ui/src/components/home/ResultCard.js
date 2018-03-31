@@ -7,7 +7,7 @@ const ResultCard = ({ setDetail, object }) =>
     onClick={() => this.props.setDetail(object)}
     to="/detail"
   >
-    <img src={`${MUSEUM_IMG_PATH}2/${object.primary_image}`} alt={object.title} />
+    <img src={`${MUSEUM_IMG_PATH}1/${object.primary_image}`} alt={object.title} />
   </Link>
  
 export default ResultCard;
