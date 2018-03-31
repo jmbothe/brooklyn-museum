@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect, withRouter} from 'react-router-dom';
 
-// import Results from './Results';
+import Results from './Results';
 import PageWrapper from '../pageWrapper/PageWrapper';
 
 class Home extends Component {
@@ -21,7 +21,7 @@ class Home extends Component {
       <PageWrapper
         {...this.props}
       >
-
+        <Results />
       </PageWrapper>
     )
   }

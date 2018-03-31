@@ -17,7 +17,7 @@ class PageHeader extends Component {
           />
           <nav>
             <Favorites
-              {...pickProps(this.props, ['currentUser', 'getObjects'])}
+              {...pickProps(this.props, ['getFavorites'])}
             />
             <Browse
               {...pickProps(this.props, ['collections', 'getObjects'])}

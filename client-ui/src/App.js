@@ -21,7 +21,7 @@ class App extends Component {
     currentUser: {
       fullName: 'Jeff Bothe',
       email: 'jmb@gmail.com',
-      favorites: [],
+      favorites: [1,2,3],
     },
   }
 
@@ -137,6 +137,34 @@ class App extends Component {
     });
   }
 
+  getFavorites = () => {
+    const favorites = this.state.currentUser.favorites.map(id => {
+      return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
+        headers: { 'api_key': apis.MUSEUM_KEY }
+      })
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          alert('No objects found based on your search criteria. Try broadening your search');
+          throw new Error(response.status);
+        }
+        return response.json();
+      })
+      .catch(error => {
+        alert('There was a problem with your request. Please try again later.');
+        console.log(error);
+      });
+    });
+
+    Promise.all(favorites).then(bodies => {
+      const objects = bodies.map(body => body.data);
+      this.setState({ objects });
+    })
+    .catch(error => {
+      alert('There was a problem with your request. Please try again later.');
+      console.log(error);
+    });
+  }
+
   addFavorite = () => {
     const favorite = { userId: this.state.currentUser.userId, objectId: this.state.detail.id };
     
@@ -180,7 +208,7 @@ class App extends Component {
     });
   }
 
-  setDetail = detail => this.setState({detail});
+  setDetail = detail => this.setState({ detail });
 
   LoginComponent = () =>
     <Login
@@ -193,7 +221,7 @@ class App extends Component {
   HomeComponent = () =>
     <Home
       {...pickProps(this.state, ['collections', 'currentUser'])}
-      {...pickProps(this, ['logOut', 'getObjects'])}
+      {...pickProps(this, ['logOut', 'getObjects', 'getFavorites'])}
     />;
 
   DetailComponent = () =>

@@ -4,7 +4,9 @@ class Search extends Component {
   state = { keyword: '' }
 
   handleSubmit = (e) => {
-    this.props.getObjects(this.state.keyword);
+    e.preventDefault();
+    const relRef = `?keyword=${this.state.keyword}`
+    this.props.getObjects(relRef);
     e.target.reset();
   }
 
