@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 import LoginHeader from './LoginHeader';
+import PageHeader from '../pageWrapper/PageHeader';
 
 class Login extends Component {
   state = { loginView: false };
@@ -22,6 +23,7 @@ class Login extends Component {
 
     return (
       <section>
+        <PageHeader />
         <LoginHeader 
           loginView={this.state.loginView}
           toggleLoginView={this.toggleLoginView}
@@ -30,7 +32,6 @@ class Login extends Component {
           inputs={inputs}
           submitAction={submitAction}
         />
-
       </section>
     )
   }

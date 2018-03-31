@@ -6,9 +6,6 @@ class PageWrapper extends Component {
   render() { 
     return (
       <Fragment>
-        <PageHeader
-          {...this.props}
-        />
         {this.props.children}
       </Fragment>
     )

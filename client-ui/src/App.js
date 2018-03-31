@@ -46,11 +46,7 @@ class App extends Component {
     });
   }
 
-  logOut = () => {
-    let currentUser = { ...this.state.currentUser };
-    currentUser = null;
-    this.setState({ currentUser });
-  }
+  logOut = () => this.setState({ currentUser: null });
 
   logIn = user => {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_LOGIN_REF}${apis.F_BASE_KEY}`, {
