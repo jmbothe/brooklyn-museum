@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 class Browse extends Component {
   handleChange = (e) => {
-    const relRef = `?collection_id=${e.target.value}&limit=35`
-    this.props.getObjects(relRef);
+    const relRef = `?collection_id=${e.target.value}&limit=30`
+    this.props.setObjects(relRef);
   }
 
   render() { 

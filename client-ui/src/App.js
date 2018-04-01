@@ -18,6 +18,7 @@ class App extends Component {
     objects: [],
     detail: {},
     relRef: null,
+    offset: 0,
     currentUser: {
       fullName: 'Jeff Bothe',
       email: 'jmb@gmail.com',
@@ -113,8 +114,8 @@ class App extends Component {
     })
   }
   
-  getObjects = (relRef) => {
-    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}`,{
+  getObjects = () => {
+    return fetch(`${apis.MUSEUM_ENDPOINT}object/${this.state.relRef}&offset=${this.state.offset}`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
     .then(response => {
@@ -124,13 +125,31 @@ class App extends Component {
       }
       return response.json();
     })
-    .then(body => {
-      this.setState({ relRef, objects: body.data });
-    })
+    .then(body => body.data)
     .catch(error => {
       alert('There was a problem with your request. Please try again later.');
       console.log(error);
     });
+  }
+
+  setObjects = (relRef) => {
+    this.setState({ offset: 0, relRef }, () => {
+      this.getObjects().then(objects => {
+        let offset = this.state.offset;
+        offset += 30;
+        this.setState({ objects, offset });
+      })
+    })
+  }
+
+  appendObjects = () => {
+    console.log('called')
+    this.getObjects().then(body => {
+      let offset = this.state.offset;
+      offset += 30;
+      const objects = [...this.state.objects, ...body];
+      this.setState({ objects, offset });
+    })
   }
 
   getFavorites = () => {
@@ -214,7 +233,7 @@ class App extends Component {
   HomeComponent = () =>
     <Home
       {...pickProps({ ...this.state, ...this },
-        'collections', 'currentUser', 'logOut', 'getObjects', 'getFavorites', 'objects')}
+        'collections', 'currentUser', 'logOut', 'setObjects', 'appendObjects', 'getFavorites', 'objects')}
     />;
 
   DetailComponent = () =>

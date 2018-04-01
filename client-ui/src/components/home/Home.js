@@ -28,11 +28,11 @@ class Home extends Component {
           <Logout {...pickProps(this.props, 'logOut', 'currentUser')} />
           <nav>
             <Favorites {...pickProps(this.props, 'getFavorites')} />
-            <Browse {...pickProps(this.props, 'collections', 'getObjects')} />
-            <Search {...pickProps(this.props, 'getObjects')} />
+            <Browse {...pickProps(this.props, 'collections', 'setObjects')} />
+            <Search {...pickProps(this.props, 'setObjects')} />
           </nav>
         </PageHeader>
-        <Results {...pickProps(this.props, 'objects')} />
+        {this.props.objects.length > 0 && <Results {...pickProps(this.props, 'objects', 'appendObjects')} />}
       </section>
     )
   }

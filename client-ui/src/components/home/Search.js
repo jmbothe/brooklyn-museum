@@ -5,8 +5,8 @@ class Search extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const relRef = `?keyword=${this.state.keyword}`
-    this.props.getObjects(relRef);
+    const relRef = `?keyword=${this.state.keyword}&limit=30`
+    this.props.setObjects(relRef);
     e.target.reset();
   }
 
