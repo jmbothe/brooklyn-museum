@@ -29,7 +29,3 @@ button:disabled {
   min-height: 100vh;
 }
 
-.result-card {
-  display: flex;
-  width: 200px;
-}

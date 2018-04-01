@@ -9,11 +9,10 @@ import Home from './components/home/Home';
 
 import './App.css';
 import './components/login/login.css';
-import './components/home/home.css';
-import './components/detail/detail.css'
 
 class App extends Component {
   state = {
+    objectsLength: null,
     collections: [],
     objects: [],
     detail: {},
@@ -26,7 +25,12 @@ class App extends Component {
     },
   }
 
+  // a couple of little functions hiding out amongst all this monoliths
+  logOut = () => this.setState({ currentUser: null });
+  setDetail = detail => this.setState({ detail });
+
   componentDidMount() {
+    console.log('mounting')
     fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
       headers: {
         'api_key': `${apis.MUSEUM_KEY}`
@@ -46,8 +50,6 @@ class App extends Component {
       console.log(error);
     });
   }
-
-  logOut = () => this.setState({ currentUser: null });
 
   logIn = user => {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_LOGIN_REF}${apis.F_BASE_KEY}`, {
@@ -133,13 +135,27 @@ class App extends Component {
   }
 
   setObjects = (relRef) => {
-    this.setState({ offset: 0, relRef }, () => {
-      this.getObjects().then(objects => {
-        let offset = this.state.offset;
-        offset += 30;
-        this.setState({ objects, offset });
+    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1`,{
+      headers: { 'api_key': apis.MUSEUM_KEY }
+    })
+    .then(response => {
+      if (response.status < 200 || response.status >= 300) {
+        alert('No objects found based on your search criteria. Try broadening your search');
+        throw new Error(response.status);
+      }
+      return response.json();
+    })
+    .then(body => {
+      this.setState({ objectsLength: body.data, offset: 0, relRef, objects: [] }, () => {
+        this.getObjects().then(objects => {
+          this.setState({ objects, offset: this.state.offset + 30 });
+        })
       })
     })
+    .catch(error => {
+      alert('There was a problem with your request. Please try again later.');
+      console.log(error);
+    });
   }
 
   appendObjects = () => {
@@ -150,6 +166,10 @@ class App extends Component {
       const objects = [...this.state.objects, ...body];
       this.setState({ objects, offset });
     })
+    .catch(error => {
+      alert('There was a problem with your request. Please try again later.');
+      console.log(error);
+    });
   }
 
   getFavorites = () => {
@@ -223,8 +243,6 @@ class App extends Component {
     });
   }
 
-  setDetail = detail => this.setState({ detail });
-
   LoginComponent = () =>
     <Login
       {...pickProps({ ...this.state, ...this }, 'currentUser', 'logIn', 'signUp')}
@@ -233,16 +251,15 @@ class App extends Component {
   HomeComponent = () =>
     <Home
       {...pickProps({ ...this.state, ...this },
-        'collections', 'currentUser', 'logOut', 'setObjects', 'appendObjects', 'getFavorites', 'objects')}
+        'setDetail', 'collections', 'currentUser', 'logOut', 'setObjects', 'appendObjects', 'getFavorites', 'objects')
+      }
     />;
 
   DetailComponent = () =>
     <Detail
-      currentUser={this.state.currentUser}
-      logOut={this.logOut}
-      detail={this.state.detail}
-      addFavorite={this.addFavorite}
-      removeFavorite={this.removeFavorite}
+    {...pickProps({ ...this.state, ...this },
+      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite')
+    }
     />;
 
   render() {

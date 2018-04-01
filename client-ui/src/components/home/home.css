@@ -1,0 +1,36 @@
+
+
+/* *************************************************
+RESULTS
+**************************************************** */
+
+.results-container {
+  columns: 4;
+  padding: 5%;
+}
+
+.results-container div {
+  position: relative;
+  margin-bottom: 6%;
+}
+
+.results-container a {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.results-container input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+.results-container img {
+  width: 100%;
+}
+
+
