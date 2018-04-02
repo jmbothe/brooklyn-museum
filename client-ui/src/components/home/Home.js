@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import {Redirect, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import { pickProps } from '../../helpers';
 
 import Browse from './Browse';
@@ -13,18 +13,7 @@ import PageHeader from '../PageHeader';
 import './home.css';
 
 class Home extends Component {
-  state = { redirect: '' };
-
-  toggleRedirect = redirect => this.setState({ redirect });
-
   render() { 
-    if (this.state.redirect) {
-      this.props.history.push("/")
-      return <Redirect to={`/${this.state.redirect}`}/>;
-    };
-
-    if (!this.props.currentUser) return <Redirect to='/login' />;
-
     return (
       <Fragment>
         <PageHeader>

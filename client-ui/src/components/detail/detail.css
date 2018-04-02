@@ -1,0 +1,17 @@
+.object-detail {
+  display: flex;
+  width: 90%;
+  margin: 5% auto;
+}
+
+.object-detail img {
+  width: 100%;
+}
+
+.object-detail > section:first-of-type {
+  width: 30%;
+}
+
+.object-detail > section:last-of-type {
+  width: 70%;
+}

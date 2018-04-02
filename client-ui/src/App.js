@@ -15,8 +15,9 @@ class App extends Component {
     objectsLength: null,
     collections: [],
     objects: [],
+    objectsDispay: [],
     detail: {},
-    relRef: null,
+    relRef: '?collection_id=23&limit=30',
     offset: 0,
     currentUser: {
       fullName: 'Jeff Bothe',
@@ -30,8 +31,8 @@ class App extends Component {
   setDetail = detail => this.setState({ detail });
 
   componentDidMount() {
-    console.log('mounting')
-    fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
+    console.log('moutin')
+    const collections = fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
       headers: {
         'api_key': `${apis.MUSEUM_KEY}`
       }
@@ -42,8 +43,14 @@ class App extends Component {
       }
       return response.json();
     })
-    .then(body => {
-      this.setState({ collections: body.data.map(obj => pickProps(obj, 'id', 'name')) });
+
+    const objects = this.getObjects();
+
+    Promise.all([collections, objects]).then(([collections, objects]) => {
+      this.setState({
+        collections: collections.data.map(obj => pickProps(obj, 'id', 'name')),
+        objects
+      });
     })
     .catch(error => {
       alert('There was a problem initializing the app. Please try again.');
@@ -258,7 +265,7 @@ class App extends Component {
   DetailComponent = () =>
     <Detail
     {...pickProps({ ...this.state, ...this },
-      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite')
+      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects')
     }
     />;
 

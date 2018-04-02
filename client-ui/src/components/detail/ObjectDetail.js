@@ -1,10 +1,79 @@
 import React, { Component } from 'react';
+import { Redirect, Link } from 'react-router-dom';
 
 import { MUSEUM_IMG_PATH } from '../../apis';
 
+import './detail.css';
+
 class ObjectDetail extends Component {
-  render() { 
+  handleChange = (relRef) => {
+    this.props.setObjects(`${relRef}&limit=30`);
+  }
+
+  render() {
     const detail = this.props.detail;
+
+    const artists = detail.artists.length > 0
+      ?  <ul>
+            <li>Artists: </li>
+            {
+              detail.artists.map(artist =>
+                <li><Link 
+                  onClick={() => this.handleChange(`?artist_id=${artist.id}`)}
+                  to={{ pathname: "/" }}
+                >{artist.name} {artist.dates}</Link></li>
+              )
+            }
+          </ul>
+      : null;
+
+    const collections = detail.collections.length > 0
+      ? <ul>
+          <li>Collections: </li>
+          {
+            detail.collections.map(collection =>
+              <li><Link
+                onClick={() => this.handleChange(`?collection_id=${collection.id}`)}
+                to={{ pathname: "/" }}
+              >
+                {collection.name}
+              </Link></li>
+            )
+          }
+        </ul>
+      : null;
+
+      const exhibitions = detail.exhibitions.length > 0
+      ? <ul>
+          <li>Exhibitions: </li>
+          {
+            detail.exhibitions.map(exhibition =>
+              <li><Link
+                onClick={() => this.handleChange(`?exhibition_id=${exhibition.id}`)}
+                to={{ pathname: "/" }}
+              >
+                {exhibition.title}
+              </Link></li>
+            )
+          }
+      </ul>
+      : null;
+
+      const geographies = detail.geographical_locations.length > 0
+      ? <ul>
+          {
+            detail.geographical_locations.map(location =>
+              <li><Link
+              onClick={() => this.handleChange(`?geographical_location_id=${location.id}`)}
+              to={{ pathname: "/" }}
+              >
+                {location.type}: {location.name}
+              </Link></li>  
+            )
+          }
+        </ul>
+      : null;
+
     return (
       <section className="object-detail">
       
@@ -15,21 +84,23 @@ class ObjectDetail extends Component {
         </section>
         
         <section>
+
           <div>
             <h2>{detail.title}</h2>
-            {/* {button} */}
+            <input type="checkbox" />
+            <h3>{detail.classification} {detail.period || detail.dynasty} {detail.object_date}</h3>
           </div>
-          <h3>{detail.classification}</h3>
-          {detail.artists.map(artist => <p>{artist.name}: {artist.dates}</p>)}
-          {detail.collections.map(collection => <p>{collection.name}</p>)}
-          {detail.exhibitions.map(exhibition => <p>{exhibition.title}</p>)}
-          {detail.geographical_locations.map(location => <p>{location.type}: {location.name}</p>)}
-          <p>{detail.period || detail.dynasty} {detail.object_date}</p>
+
+          {artists}
+          {collections}
+          {exhibitions}
+          {geographies}
           <p>{detail.medium}</p>
+
+          <p>Credit: {detail.credit_line}</p>
+          <p>{detail.museum_location.name}</p>
           <p>Dimensions: {detail.dimensions}</p>
           <p>{detail.description}</p>
-          <p>Credit: {detail.credit_line}</p>
-          {detail.museum_location.name}
         </section>
 
       </section>

@@ -20,7 +20,7 @@ class Detail extends Component {
         <Logout {...pickProps(this.props, 'logOut', 'currentUser')} />
        
       </PageHeader>
-      <ObjectDetail {...pickProps(this.props, 'detail', 'removeFavorite', 'addFavorite')} />
+      <ObjectDetail {...pickProps(this.props, 'setObjects', 'detail', 'removeFavorite', 'addFavorite')} />
     </ Fragment>
     )
   }
