@@ -31,7 +31,6 @@ class App extends Component {
   setDetail = detail => this.setState({ detail });
 
   componentDidMount() {
-    console.log('moutin')
     const collections = fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
       headers: {
         'api_key': `${apis.MUSEUM_KEY}`
@@ -43,14 +42,10 @@ class App extends Component {
       }
       return response.json();
     })
-
-    const objects = this.getObjects();
-
-    Promise.all([collections, objects]).then(([collections, objects]) => {
+    .then(body => {
       this.setState({
-        collections: collections.data.map(obj => pickProps(obj, 'id', 'name')),
-        objects
-      });
+        collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
+      }, () => this.setObjects('?collection_id=23&limit=30'));
     })
     .catch(error => {
       alert('There was a problem initializing the app. Please try again.');
@@ -141,7 +136,7 @@ class App extends Component {
     });
   }
 
-  setObjects = (relRef) => {
+  setObjects = (relRef, callback) => {
     fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
@@ -155,7 +150,9 @@ class App extends Component {
     .then(body => {
       this.setState({ objectsLength: body.data, offset: 0, relRef, objects: [] }, () => {
         this.getObjects().then(objects => {
-          this.setState({ objects, offset: this.state.offset + 30 });
+          this.setState({ objects, offset: this.state.offset + 30 }, () =>{
+            callback && callback();
+          });
         })
       })
     })
@@ -179,7 +176,7 @@ class App extends Component {
     });
   }
 
-  getFavorites = () => {
+  getFavorites = (callback) => {
     const favorites = this.state.currentUser.favorites.map(id => {
       return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
         headers: { 'api_key': apis.MUSEUM_KEY }
@@ -199,7 +196,7 @@ class App extends Component {
 
     Promise.all(favorites).then(bodies => {
       const objects = bodies.map(body => body.data);
-      this.setState({ objects });
+      this.setState({ objects }, callback && callback());
     })
     .catch(error => {
       alert('There was a problem with your request. Please try again later.');

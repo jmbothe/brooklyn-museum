@@ -5,10 +5,11 @@ class Search extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const relRef = `?keyword=${this.state.keyword}&limit=30`
-    this.props.setObjects(relRef);
     e.target.reset();
-    if (this.props.redirect) this.props.toggleRedirect();
+
+    const relRef = `?keyword=${this.state.keyword}&limit=30`;
+
+    this.props.setObjects(relRef, () => this.props.redirect && this.props.toggleRedirect());
   }
 
   onChange = (e) => this.setState({ keyword: e.target.value });
