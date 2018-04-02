@@ -12,7 +12,14 @@ const ResultCard = ({ setDetail, object }) =>
         hash: `${object.id}`
       }}
     />
-    <img src={`${MUSEUM_IMG_PATH}2/${object.primary_image}`} alt={object.title} className="result-card" />
+    <img
+      src={
+        object.copyright_restricted
+        ? `${MUSEUM_IMG_PATH}_fairuse/${object.primary_image}`
+        : `${MUSEUM_IMG_PATH}2/${object.primary_image}`
+      }
+      alt={object.title}
+      className="result-card" />
   </div>
  
 export default ResultCard;

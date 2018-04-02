@@ -7,7 +7,9 @@ class Results extends Component {
 
   render() {
     const cards = this.props.objects.map(object =>
-      <ResultCard object={object} {...pickProps(this.props, 'objects', 'setDetail')}/>
+      object.primary_image
+      ? <ResultCard key={object.id} object={object} {...pickProps(this.props, 'objects', 'setDetail')}/>
+      : null
     )
 
     return (

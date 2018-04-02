@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 
 class Browse extends Component {
-  state = {
-    redirect: false,
-    location: ''
-  }
+
   handleChange = (e) => {
     const relRef = `?collection_id=${e.target.value}&limit=30`
     this.props.setObjects(relRef);
+    if (this.props.redirect) this.props.toggleRedirect();
   }
 
   render() {

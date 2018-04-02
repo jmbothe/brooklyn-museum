@@ -124,7 +124,7 @@ class App extends Component {
   }
   
   getObjects = () => {
-    return fetch(`${apis.MUSEUM_ENDPOINT}object/${this.state.relRef}&offset=${this.state.offset}`,{
+    return fetch(`${apis.MUSEUM_ENDPOINT}object/${this.state.relRef}&offset=${this.state.offset}&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
     .then(response => {
@@ -142,7 +142,7 @@ class App extends Component {
   }
 
   setObjects = (relRef) => {
-    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1`,{
+    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
     .then(response => {
@@ -265,7 +265,7 @@ class App extends Component {
   DetailComponent = () =>
     <Detail
     {...pickProps({ ...this.state, ...this },
-      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects')
+      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects', 'collections')
     }
     />;
 
