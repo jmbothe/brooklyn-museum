@@ -78,8 +78,23 @@ class ObjectDetail extends Component {
       <section className="object-detail">
       
         <section>
-          <a href={`${MUSEUM_IMG_PATH}4/${detail.primary_image}`} target="_blank" rel="noopener noreferrer">
-            <img src={`${MUSEUM_IMG_PATH}3/${detail.primary_image}`} alt={detail.title}/>
+          <a
+            href={
+              detail.copyright_restricted
+                ? `${MUSEUM_IMG_PATH}_fairuse/${detail.primary_image}`
+                : `${MUSEUM_IMG_PATH}4/${detail.primary_image}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+            src={
+              detail.copyright_restricted
+                ? `${MUSEUM_IMG_PATH}_fairuse/${detail.primary_image}`
+                : `${MUSEUM_IMG_PATH}3/${detail.primary_image}`
+            }
+              alt={detail.title}
+            />
           </a>
         </section>
         

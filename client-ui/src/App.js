@@ -265,7 +265,7 @@ class App extends Component {
   DetailComponent = () =>
     <Detail
     {...pickProps({ ...this.state, ...this },
-      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects', 'collections')
+      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects', 'collections', 'getFavorites')
     }
     />;
 
