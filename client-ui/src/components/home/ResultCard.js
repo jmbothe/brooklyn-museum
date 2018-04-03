@@ -11,11 +11,25 @@ class ResultCard extends Component {
     this.props.history.push("/detail");
   }
 
-  render() { 
+  handleSelect = (e) => {
+    const id = this.props.object.id;
+
+    e.target.checked
+      ? this.props.addFavorite(id)
+      : this.props.removeFavorite(id)
+  }
+
+  render() {
+    const object = this.props.object;
+
     return (
       <div>
 
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          onChange={this.handleSelect}
+          checked={this.props.currentUser.favorites.some(fav => fav.objectId == object.id)}
+        />
 
         <Link
           onClick={this.handleClick}
@@ -24,11 +38,11 @@ class ResultCard extends Component {
 
         <img
           src={
-            this.props.object.copyright_restricted
-            ? `${MUSEUM_IMG_PATH}_fairuse/${this.props.object.primary_image}`
-            : `${MUSEUM_IMG_PATH}2/${this.props.object.primary_image}`
+            object.copyright_restricted
+            ? `${MUSEUM_IMG_PATH}_fairuse/${object.primary_image}`
+            : `${MUSEUM_IMG_PATH}2/${object.primary_image}`
           }
-          alt={this.props.object.title}
+          alt={object.title}
           className="result-card" />
 
       </div>

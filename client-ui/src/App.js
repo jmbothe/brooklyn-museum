@@ -19,11 +19,7 @@ class App extends Component {
     detail: {},
     relRef: '?collection_id=23&limit=30',
     offset: 0,
-    currentUser: {
-      fullName: 'Jeff Bothe',
-      email: 'jmb@gmail.com',
-      favorites: [1,2,3],
-    },
+    currentUser: null,
   }
 
   // a couple of little functions hiding out amongst all this monoliths
@@ -103,7 +99,6 @@ class App extends Component {
     })
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
-        alert('There was a problem signing you up. Please try again later.');
         throw new Error(response.status);
       }
       return response.json();
@@ -124,7 +119,6 @@ class App extends Component {
     })
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
-        alert('No objects found based on your search criteria. Try broadening your search');
         throw new Error(response.status);
       }
       return response.json();
@@ -142,7 +136,6 @@ class App extends Component {
     })
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
-        alert('No objects found based on your search criteria. Try broadening your search');
         throw new Error(response.status);
       }
       return response.json();
@@ -163,7 +156,6 @@ class App extends Component {
   }
 
   appendObjects = () => {
-    console.log('called')
     this.getObjects().then(body => {
       let offset = this.state.offset;
       offset += 30;
@@ -177,13 +169,12 @@ class App extends Component {
   }
 
   getFavorites = (callback) => {
-    const favorites = this.state.currentUser.favorites.map(id => {
-      return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
+    const favorites = this.state.currentUser.favorites.map(favorite => {
+      return fetch(`${apis.MUSEUM_ENDPOINT}object/${favorite.objectId}`,{
         headers: { 'api_key': apis.MUSEUM_KEY }
       })
       .then(response => {
         if (response.status < 200 || response.status >= 300) {
-          alert('No objects found based on your search criteria. Try broadening your search');
           throw new Error(response.status);
         }
         return response.json();
@@ -204,8 +195,8 @@ class App extends Component {
     });
   }
 
-  addFavorite = () => {
-    const favorite = { userId: this.state.currentUser.userId, objectId: this.state.detail.id };
+  addFavorite = (objectId) => {
+    const favorite = { userId: this.state.currentUser.userId, objectId };
     
     fetch(`${apis.USERS_ENDPOINT}add-favorite/`, {
       method: 'POST',
@@ -214,15 +205,14 @@ class App extends Component {
     })
     .then(response => {
       if (response.status < 200 || response.status >= 300) {
-        alert('There was a problem adding this item to your favorites. Please try again');
         throw new Error(response.status);
       }
       return response.json();
     })
     .then(body => {
-      const favorites = [ ...this.state.currentUser.favorites ];
-      favorites.push(body);
-      this.setState({ currentUser: { favorites }});
+      const currentUser = { ...this.state.currentUser };
+      currentUser.favorites.push(body);
+      this.setState({ currentUser });
     })
     .catch(error => {
       alert('There was a problem adding this item to your favorites. Please try again later.');
@@ -230,40 +220,66 @@ class App extends Component {
     });
   }
 
-  removeFavorite = id => {
-    fetch(`${apis.USERS_ENDPOINT}delete-favorite/${id}`, { method: 'DELETE' })
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        alert('There was a problem removing this item to your favorites. Please try again.');
-        throw new Error(response.status);
-      }
-      const favorites = [ ...this.state.currentUser.favorites ];
-      favorites.splice(favorites.indexOf(favorites.find(obj => obj.favoriteId == id)), 0);
-      this.setState({ currentUser: { favorites } });
-    })
-    .catch(error => {
-      alert('There was a problem removing this item to your favorites. Please try again later.');
-      console.log(error);
-    });
+  removeFavorite = objectId => {
+    const currentUser = { ...this.state.currentUser };
+    const favorites = currentUser.favorites;
+    const favoriteId =
+      favorites.find(fav => fav.objectId == objectId).favoriteId;
+
+    fetch(`${apis.USERS_ENDPOINT}delete-favorite/${favoriteId}`, { method: 'DELETE' })
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(response.status);
+        }
+        const objects = [...this.state.objects]
+        favorites.splice(favorites.indexOf(favorites.find(fav => fav.favoriteId == favoriteId)), 1);
+        objects.splice(objects.indexOf(objects.find(obj => obj.id == objectId)), 1);
+        this.setState({ currentUser, objects });
+      })
+      .catch(error => {
+        alert('There was a problem removing this item to your favorites. Please try again later.');
+        console.log(error);
+      });
   }
 
   LoginComponent = () =>
     <Login
-      {...pickProps({ ...this.state, ...this }, 'currentUser', 'logIn', 'signUp')}
+      {...pickProps({ ...this.state, ...this },
+        'currentUser',
+        'logIn',
+        'signUp'
+      )}
     />;
 
   HomeComponent = () =>
     <Home
       {...pickProps({ ...this.state, ...this },
-        'setDetail', 'collections', 'currentUser', 'logOut', 'setObjects', 'appendObjects', 'getFavorites', 'objects')
-      }
+        'setDetail',
+        'collections',
+        'currentUser',
+        'logOut',
+        'setObjects',
+        'appendObjects',
+        'getFavorites',
+        'objects',
+        'addFavorite',
+        'removeFavorite'
+      )}
     />;
 
   DetailComponent = () =>
     <Detail
-    {...pickProps({ ...this.state, ...this },
-      'detail', 'currentUser', 'logOut', 'removeFavorite', 'addFavorite', 'setObjects', 'collections', 'getFavorites')
-    }
+      {...pickProps({ ...this.state, ...this },
+        'detail',
+        'currentUser',
+        'logOut',
+        'removeFavorite',
+        'addFavorite',
+        'setObjects',
+        'collections',
+        'getFavorites',
+        'setDetail'
+      )}
     />;
 
   render() {

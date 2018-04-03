@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -79,6 +82,37 @@ public class UserController {
         userFromDb.setFavorites(userRequest.getFavorites());
 
         return userRepository.save(userFromDb);
+    }
+
+    @GetMapping("/get-recommendations/{objectId}")
+    @ResponseBody
+    public List<Long> getRecommendations(@PathVariable Long objectId) throws NotFoundException {
+        HashMap<Long, Long> objectIds = new HashMap<>();
+
+        Iterable<User> allUsers = userRepository.findAll();
+
+        List<User> usersWhoLiked = StreamSupport.stream(allUsers.spliterator(), false)
+            .filter(user -> user.getFavorites().stream().filter(fav -> fav.getObjectId().equals(objectId)).findFirst().isPresent())
+            .collect(Collectors.toList());
+
+        for (User user : usersWhoLiked) {
+            for (Favorite fav : user.getFavorites()) {
+                if (fav.getObjectId() != objectId) {
+                    if (objectIds.containsKey(fav.getObjectId())) {
+                        objectIds.compute(fav.getObjectId(), (k, v) -> v + 1);
+                    } else {
+                        objectIds.put(fav.getObjectId(), 0L);
+                    }
+                }
+
+            }
+        }
+
+        return objectIds.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(obj -> obj.getKey())
+                .limit(10)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/add-favorite/")

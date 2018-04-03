@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {Redirect} from 'react-router-dom';
 
 import LoginForm from './LoginForm';
@@ -22,17 +22,20 @@ class Login extends Component {
     : this.props.signUp;
 
     return (
-      <section>
-        <PageHeader />
-        <LoginHeader 
-          loginView={this.state.loginView}
-          toggleLoginView={this.toggleLoginView}
-        />
-        <LoginForm
-          inputs={inputs}
-          submitAction={submitAction}
-        />
-      </section>
+      <Fragment>
+        <PageHeader>
+          </PageHeader>
+          <section className="login-container">
+            <LoginHeader 
+              loginView={this.state.loginView}
+              toggleLoginView={this.toggleLoginView}
+            />
+            <LoginForm
+              inputs={inputs}
+              submitAction={submitAction}
+            />
+        </section>
+      </Fragment>
     )
   }
 }

@@ -16,20 +16,15 @@ class Search extends Component {
 
   render() { 
     return (
-      <form className="search-form" onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit}>
+        <label htmlFor="keyword"></label>
+        <input
+          type="text" id="keyword" name="keyword"
+          onChange={this.onChange}
+          placeholder="Search"
+          />
 
-        <div>
-          <label htmlFor="keyword">Search</label>
-          <input
-            type="text" id="keyword" name="keyword"
-            onChange={this.onChange}
-            />
-        </div>
-
-        <div className="form-row">
-          <input type="submit" id="submit" />
-        </div>
-        
+        <input type="submit" id="submit" />
       </form>
     )
   }

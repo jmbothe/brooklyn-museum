@@ -1,3 +1,37 @@
 .tab-fade {
   opacity: 0.5;
 }
+
+.login-container {
+  width: 25%;
+  margin: 10% auto 0;
+  box-shadow: 2px 8px 10px #ccc;
+}
+
+.login-container > header {
+  display: flex;
+}
+
+.login-container > header button {
+  width: 50%;
+  text-align: center;
+  padding: 2%;
+  background-color: #00aff0;
+  color: #fff;
+  font-weight: 900;
+  border: none;
+}
+
+.login-container > form {
+  padding: 5% 10%;
+}
+
+.login-container > form > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 4% 0;
+}
+
+.login-container > form > div:last-child {
+  justify-content: flex-end;
+}

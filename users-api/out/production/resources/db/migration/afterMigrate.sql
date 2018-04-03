@@ -1,4 +1,4 @@
-insert into USERS (EMAIL, FULL_NAME) values ('ltomsuv@reverbnation.com', 'Lisabeth Tomsu');
+insert into USERS (EMAIL, FULL_NAME) values ('jmb@gmail.com', 'Jeff Bothe');
 insert into USERS (EMAIL, FULL_NAME) values ('starplyw@nba.com', 'Stacey Tarply');
 insert into USERS (EMAIL, FULL_NAME) values ('rrigglesfordx@sciencedirect.com', 'Rebecca Rigglesford');
 

@@ -6,15 +6,9 @@ import ResultCard from './ResultCard';
 class Results extends Component {
 
   render() {
-    const cards = this.props.objects.map(object =>
-      object.primary_image
-      ? <ResultCard key={object.id} object={object} {...pickProps(this.props, 'objects', 'setDetail')}/>
-      : null
-    )
-
     return (
       <section className="results-container">
-        {cards}
+        {this.props.children}
       </section>
     )
   }

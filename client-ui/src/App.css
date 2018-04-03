@@ -1,7 +1,12 @@
+/* *************************************************
+MAIN
+**************************************************** */
+
 * {
   box-sizing: border-box;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   color: #212121;
+  font-family: 'Assistant', sans-serif;
 }
 
 html {
@@ -16,7 +21,11 @@ body {
 }
 
 button, input[type="submit"], select {
+  background: #fff;
+  border: 1px solid #212121;
+  border-radius: 2px;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 button:disabled {
@@ -24,8 +33,72 @@ button:disabled {
   cursor: not-allowed;
 }
 
+h1 {
+  margin: 0;
+  font-size: 5rem;
+}
+
+h2 {
+  margin: 0 0 1%;
+  font-size: 2.5rem;
+}
+
 #root {
   width: 100%;
   min-height: 100vh;
 }
 
+/* *************************************************
+MAIN HEADER
+**************************************************** */
+
+#root > header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#root > header > div:first-child {
+  width: 70%;
+  background: url('./museum-logo.png');
+  background-size: cover;
+}
+
+#root > header > div:nth-child(2) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  width: 30%;
+  padding: 2%;
+  background: url('./museum-logo.png') no-repeat;
+  background-size: contain;
+}
+
+#root > header > div:nth-child(2) button {
+  margin-left: 5%;
+}
+
+#root > header nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: .75% 5%;
+  background-color: #f4f5f5;
+}
+
+#root > header nav > * {
+  width: 25%;
+}
+
+#root > header form {
+  display: flex;
+  justify-content: space-between;
+}
+
+#root > header form > input[type="text"] {
+  width: 70%;
+  padding: 1%;
+}
+
+#root > header form > input[type="submit"] {
+  width: 25%;
+}

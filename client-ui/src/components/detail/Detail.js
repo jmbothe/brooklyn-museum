@@ -29,7 +29,7 @@ class Detail extends Component {
             <Search redirect {...pickProps({...this.props, ...this}, 'setObjects', 'toggleRedirect')} />
           </nav>
         </PageHeader>
-        <ObjectDetail {...pickProps(this.props, 'setObjects', 'detail', 'removeFavorite', 'addFavorite')} />
+        <ObjectDetail {...pickProps(this.props, 'setDetail', 'currentUser', 'setObjects', 'detail', 'removeFavorite', 'addFavorite')} />
       </ Fragment>
     )
   }

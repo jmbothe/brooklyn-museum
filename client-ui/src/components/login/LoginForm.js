@@ -22,7 +22,7 @@ class LoginForm extends Component {
     <form className="login-form" onSubmit={this.handleSubmit}>
       {
         this.props.inputs.map((input, index) =>
-          <LoginRow {...input} onChange={this.props.onChange} key={input.name}/>)
+          <LoginRow {...input} onChange={this.onChange} key={input.name}/>)
       }
       <div>
         <input type="submit" id="submit" />

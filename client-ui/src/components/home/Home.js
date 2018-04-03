@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import {withRouter} from 'react-router-dom';
+import {Redirect, withRouter} from 'react-router-dom';
 import { pickProps } from '../../helpers';
 
 import Browse from './Browse';
@@ -7,13 +7,33 @@ import Search from './Search';
 import Favorites from './Favorites';
 import Logout from './Logout';
 import Results from './Results';
+import ResultCard from './ResultCard';
 import PageHeader from '../PageHeader';
 
 
 import './home.css';
 
 class Home extends Component {
-  render() { 
+  render() {
+
+    if (!this.props.currentUser) return <Redirect to="/login" />
+
+    const cards = this.props.objects.map(object =>
+      object.primary_image
+      ? <ResultCard
+          key={object.id}
+          object={object}
+          {...pickProps(this.props,
+            'objects',
+            'setDetail',
+            'addFavorite',
+            'removeFavorite',
+            'currentUser'
+          )}
+        />
+      : null
+    )
+
     return (
       <Fragment>
         <PageHeader>
@@ -24,7 +44,9 @@ class Home extends Component {
             <Search {...pickProps(this.props, 'setObjects')} />
           </nav>
         </PageHeader>
-        <Results {...pickProps({...this, ...this.props}, 'objects', 'appendObjects', 'setDetail')} />
+        <Results {...pickProps({...this, ...this.props}, 'appendObjects')} >
+          {cards}
+        </Results>
       </ Fragment>
     )
   }
