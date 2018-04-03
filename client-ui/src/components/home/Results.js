@@ -5,16 +5,12 @@ import { pickProps } from '../../helpers';
 import ResultCard from './ResultCard';
 
 class Results extends Component {
-
   render() {
+    console.log(this.props.hasMore)
     return (
-      // <section className="results-container">
-      //   {this.props.children}
-      // </section>
-
       <MasonryInfiniteScroller
         className="results-container"
-        hasMore={true}
+        hasMore={this.props.hasMore}
         loadMore={this.props.appendObjects}
         sizes={[{columns: 5, gutter: 20}]}
         pack={true}

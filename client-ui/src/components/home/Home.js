@@ -44,7 +44,7 @@ class Home extends Component {
             <Search {...pickProps(this.props, 'setObjects')} />
           </nav>
         </PageHeader>
-        <Results {...pickProps({...this, ...this.props}, 'appendObjects')} >
+        <Results {...pickProps({...this, ...this.props}, 'appendObjects', 'hasMore')} >
           {cards}
         </Results>
       </ Fragment>

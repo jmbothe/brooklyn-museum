@@ -12,12 +12,12 @@ import './components/login/login.css';
 
 class App extends Component {
   state = {
+    hasMore: true,
     objectsLength: null,
     collections: [],
     objects: [],
-    objectsDispay: [],
     detail: {},
-    relRef: '?collection_id=23&limit=30',
+    relRef: null,
     offset: 0,
     currentUser: null,
   }
@@ -41,7 +41,7 @@ class App extends Component {
     .then(body => {
       this.setState({
         collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
-      }, () => this.setObjects('?collection_id=23&limit=30'));
+      }, () => this.setObjects('?collection_id=10&limit=30'));
     })
     .catch(error => {
       alert('There was a problem initializing the app. Please try again.');
@@ -143,7 +143,7 @@ class App extends Component {
     .then(body => {
       this.setState({ objectsLength: body.data, offset: 0, relRef, objects: [] }, () => {
         this.getObjects().then(objects => {
-          this.setState({ objects, offset: this.state.offset + 30 }, () =>{
+          this.setState({ objects, offset: this.state.offset + 30, hasMore: body.data > this.state.offset + 30 }, () =>{
             callback && callback();
           });
         })
@@ -160,7 +160,7 @@ class App extends Component {
       let offset = this.state.offset;
       offset += 30;
       const objects = [...this.state.objects, ...body];
-      this.setState({ objects, offset });
+      this.setState({ objects, offset, hasMore: this.state.objectsLength > offset });
     })
     .catch(error => {
       alert('There was a problem with your request. Please try again later.');
@@ -179,20 +179,17 @@ class App extends Component {
         }
         return response.json();
       })
+    });
+
+    Promise.all(favorites)
+      .then(bodies => {
+        const objects = bodies.map(body => body.data);
+        this.setState({ objects, objectsLength: objects.length, offset: 30, hasMore: false  }, callback && callback());
+      })
       .catch(error => {
         alert('There was a problem with your request. Please try again later.');
         console.log(error);
       });
-    });
-
-    Promise.all(favorites).then(bodies => {
-      const objects = bodies.map(body => body.data);
-      this.setState({ objects }, callback && callback());
-    })
-    .catch(error => {
-      alert('There was a problem with your request. Please try again later.');
-      console.log(error);
-    });
   }
 
   addFavorite = (objectId) => {
@@ -261,7 +258,8 @@ class App extends Component {
         'getFavorites',
         'objects',
         'addFavorite',
-        'removeFavorite'
+        'removeFavorite',
+        'hasMore'
       )}
     />;
 

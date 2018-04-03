@@ -4,16 +4,20 @@
   margin: 5% auto;
 }
 
+.object-detail h3 {
+  margin: 0;
+}
+
 .object-detail img {
   width: 100%;
 }
 
 .object-detail > section:first-of-type {
-  width: 30%;
+  width: 25%;
 }
 
 .object-detail > section:last-of-type {
-  width: 70%;
+  width: 75%;
 }
 
 .object-detail > section:last-of-type > div {
@@ -21,11 +25,32 @@
 }
 
 .object-detail > section:last-of-type > div > div:first-child {
-  width: 75%;
+  width: 70%;
+  padding: 0 4%;
 }
 
 .object-detail > section:last-of-type > div > div:last-child {
-  width: 25%;
+  width: 30%;
+}
+
+.object-detail > section:last-of-type > div > div:last-child ul {
+  padding: 6% 10%;
+  background-color: #f4f5f5;
+}
+
+.object-detail > section:last-of-type > div > div:last-child li {
+  clear: both;
+  padding: 2% 0;
+  text-align: right;
+  text-decoration: underline;
+  cursor: pointer;
+
+}
+
+.object-detail > section:last-of-type > div > div:last-child li:first-of-type {
+  text-decoration: none;
+  cursor: default;
+  font-weight: 900;
 }
 
 .object-detail input[type="checkbox"] {
