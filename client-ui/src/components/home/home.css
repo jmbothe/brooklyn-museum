@@ -3,13 +3,18 @@ RESULTS
 **************************************************** */
 
 .results-container {
-  columns: 5;
-  padding: 5%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /* padding: 5%; */
+  margin: 4% auto;
 }
 
 .results-container div {
   position: relative;
   margin-bottom: 6%;
+  width: 250px;
+  height: 250px;
 }
 
 .results-container a {
@@ -27,8 +32,3 @@ RESULTS
   right: 0;
   z-index: 1;
 }
-.results-container img {
-  width: 100%;
-}
-
-

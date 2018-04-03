@@ -231,10 +231,8 @@ class App extends Component {
         if (response.status < 200 || response.status >= 300) {
           throw new Error(response.status);
         }
-        const objects = [...this.state.objects]
         favorites.splice(favorites.indexOf(favorites.find(fav => fav.favoriteId == favoriteId)), 1);
-        objects.splice(objects.indexOf(objects.find(obj => obj.id == objectId)), 1);
-        this.setState({ currentUser, objects });
+        this.setState({ currentUser});
       })
       .catch(error => {
         alert('There was a problem removing this item to your favorites. Please try again later.');
