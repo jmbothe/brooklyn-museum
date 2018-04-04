@@ -24,16 +24,17 @@ class Login extends Component {
     return (
       <Fragment>
         <PageHeader>
-          </PageHeader>
-          <section className="login-container">
-            <LoginHeader 
-              loginView={this.state.loginView}
-              toggleLoginView={this.toggleLoginView}
-            />
-            <LoginForm
-              inputs={inputs}
-              submitAction={submitAction}
-            />
+          <div></div>
+        </PageHeader>
+        <section className="login-container">
+          <LoginHeader 
+            loginView={this.state.loginView}
+            toggleLoginView={this.toggleLoginView}
+          />
+          <LoginForm
+            inputs={inputs}
+            submitAction={submitAction}
+          />
         </section>
       </Fragment>
     )

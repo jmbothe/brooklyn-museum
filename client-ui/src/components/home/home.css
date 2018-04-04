@@ -6,15 +6,14 @@ RESULTS
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  /* padding: 5%; */
-  margin: 4% auto;
+  padding: 5%;
 }
 
 .results-container div {
   position: relative;
-  margin-bottom: 6%;
-  width: 250px;
-  height: 250px;
+  margin: 1%;
+  width: 230px;
+  height: 230px;
 }
 
 .results-container a {

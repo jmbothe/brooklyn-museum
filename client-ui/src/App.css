@@ -60,6 +60,7 @@ MAIN HEADER
 #root > header {
   display: flex;
   flex-wrap: wrap;
+  border-bottom: 2px solid #00aff0;
 }
 
 #root > header > div:first-child {

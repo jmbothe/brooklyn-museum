@@ -20,6 +20,8 @@
   color: #fff;
   font-weight: 900;
   border: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .login-container > form {

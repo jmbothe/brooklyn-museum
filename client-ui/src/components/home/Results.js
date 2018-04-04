@@ -1,22 +1,25 @@
 import React, { Component } from 'react';
-import MasonryInfiniteScroller from 'react-masonry-infinite';
+// import MasonryInfiniteScroller from 'react-masonry-infinite';
+import InfiniteScroll from 'react-infinite-scroller';
 import { pickProps } from '../../helpers';
 
 import ResultCard from './ResultCard';
 
 class Results extends Component {
   render() {
-    console.log(this.props.hasMore)
+    const loader = <div className="loader">Loading ...</div>;
+
     return (
-      <MasonryInfiniteScroller
-        className="results-container"
+      <InfiniteScroll
+        pageStart={0}
         hasMore={this.props.hasMore}
         loadMore={this.props.appendObjects}
-        sizes={[{ columns: 5, gutter: 20 }]}
-        pack={true}
+        loader={loader}
       >
-        {this.props.children}
-      </MasonryInfiniteScroller>
+        <div className="results-container">
+          {this.props.children}
+        </div>
+      </InfiniteScroll>
     )
   }
 }

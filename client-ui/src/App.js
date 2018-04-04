@@ -23,27 +23,7 @@ class App extends Component {
     currentUser: null,
   }
 
-  // a couple of little functions hiding out amongst all this monoliths
   logOut = () => this.setState({ currentUser: null });
-
-  setDetail = detail => {
-      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
-      .then(handleNon200Response)
-      .then(recIds => {
-        const recPromises = recIds.map(id => {
-          return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
-            headers: { 'api_key': apis.MUSEUM_KEY }
-          })
-          .then(handleNon200Response)
-        })
-    
-        Promise.all(recPromises).then(bodies => {
-          const recommendations = bodies.map(body => body.data);
-          this.setState({ recommendations, detail })
-        })
-      })
-      .catch(handlePromiseFailure);
-    }
 
   componentDidMount() {
     const collections = fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
@@ -186,6 +166,25 @@ class App extends Component {
         }
         favorites.splice(favorites.indexOf(favorites.find(fav => fav.favoriteId == favoriteId)), 1);
         this.setState({ currentUser});
+      })
+      .catch(handlePromiseFailure);
+  }
+
+  setDetail = detail => {
+    fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
+      .then(handleNon200Response)
+      .then(recIds => {
+        const recPromises = recIds.map(id => {
+          return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
+            headers: { 'api_key': apis.MUSEUM_KEY }
+          })
+          .then(handleNon200Response)
+        })
+    
+        Promise.all(recPromises).then(bodies => {
+          const recommendations = bodies.map(body => body.data);
+          this.setState({ recommendations, detail })
+        })
       })
       .catch(handlePromiseFailure);
   }
