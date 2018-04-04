@@ -4,7 +4,6 @@ MAIN
 
 * {
   box-sizing: border-box;
-  /* border: 1px solid black; */
   color: #212121;
   font-family: 'Assistant', sans-serif;
 }
@@ -76,7 +75,7 @@ MAIN HEADER
   align-items: flex-start;
   width: 30%;
   padding: 2%;
-  background: url('./museum-logo.png') no-repeat;
+  background: url('./museum-logo.png') no-repeat right;
   background-size: contain;
 }
 

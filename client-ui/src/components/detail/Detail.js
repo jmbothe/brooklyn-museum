@@ -7,7 +7,7 @@ import Browse from '../home/Browse';
 import Search from '../home/Search';
 import Favorites from '../home/Favorites';
 import Logout from '../home/Logout';
-import ObjectDetail from './ObjectDetail'
+import ObjectDetail from './ObjectDetail';
 
 import './detail.css'
 
@@ -29,7 +29,7 @@ class Detail extends Component {
             <Search redirect {...pickProps({...this.props, ...this}, 'setObjects', 'toggleRedirect')} />
           </nav>
         </PageHeader>
-        <ObjectDetail {...pickProps(this.props, 'setDetail', 'currentUser', 'setObjects', 'detail', 'removeFavorite', 'addFavorite')} />
+        <ObjectDetail {...pickProps(this.props, 'recommendations', 'setDetail', 'currentUser', 'setObjects', 'detail', 'removeFavorite', 'addFavorite')} />
       </ Fragment>
     )
   }

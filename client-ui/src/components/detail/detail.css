@@ -20,6 +20,10 @@
   width: 75%;
 }
 
+.object-detail > section:last-of-type > p {
+  padding: 0 4%;
+}
+
 .object-detail > section:last-of-type > div {
   display: flex;
 }
@@ -27,6 +31,19 @@
 .object-detail > section:last-of-type > div > div:first-child {
   width: 70%;
   padding: 0 4%;
+}
+
+.object-detail > section:last-of-type > div > div:first-child ul {
+  padding: 2% 0;
+}
+
+.object-detail > section:last-of-type > div > div:first-child li {
+  padding: .5% 3%;
+}
+
+.object-detail > section:last-of-type > div > div:first-child li:first-of-type {
+  padding: .5% 0;
+  font-weight: 700;
 }
 
 .object-detail > section:last-of-type > div > div:last-child {

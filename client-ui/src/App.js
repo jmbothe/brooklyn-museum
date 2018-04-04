@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import { pickProps } from './helpers';
+import { pickProps, handleNon200Response, handlePromiseFailure } from './helpers';
 import apis from './apis';
 import Detail from './components/detail/Detail';
 import Login from './components/login/Login';
@@ -17,14 +17,33 @@ class App extends Component {
     collections: [],
     objects: [],
     detail: {},
-    relRef: null,
+    recommendations: [],
     offset: 0,
+    relRef: null,
     currentUser: null,
   }
 
   // a couple of little functions hiding out amongst all this monoliths
   logOut = () => this.setState({ currentUser: null });
-  setDetail = detail => this.setState({ detail });
+
+  setDetail = detail => {
+      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
+      .then(handleNon200Response)
+      .then(recIds => {
+        const recPromises = recIds.map(id => {
+          return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
+            headers: { 'api_key': apis.MUSEUM_KEY }
+          })
+          .then(handleNon200Response)
+        })
+    
+        Promise.all(recPromises).then(bodies => {
+          const recommendations = bodies.map(body => body.data);
+          this.setState({ recommendations, detail })
+        })
+      })
+      .catch(handlePromiseFailure);
+    }
 
   componentDidMount() {
     const collections = fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
@@ -32,21 +51,13 @@ class App extends Component {
         'api_key': `${apis.MUSEUM_KEY}`
       }
     })
-    .then(response => { 
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(body => {
       this.setState({
         collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
       }, () => this.setObjects('?collection_id=10&limit=30'));
     })
-    .catch(error => {
-      alert('There was a problem initializing the app. Please try again.');
-      console.log(error);
-    });
+    .catch(handlePromiseFailure);
   }
 
   logIn = user => {
@@ -55,24 +66,11 @@ class App extends Component {
       body: JSON.stringify({ ...user, returnSecureToken: true }),
       headers: {'Content-Type': 'application/json'},
     })
-    .then(response => { 
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(({ email }) => fetch(`${apis.USERS_ENDPOINT}get-user-by-email/${email}/`))
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(currentUser => this.setState({ currentUser }))
-    .catch(error => {
-      alert('There was a problem logging in. Please try again.');
-      console.log(error);
-    });
+    .catch(handlePromiseFailure);
   }
 
   signUp = newUser => {
@@ -84,12 +82,7 @@ class App extends Component {
       }),
       headers: {'Content-Type': 'application/json'},
     })
-    .then(response => { 
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(body => {
       return fetch(`${apis.USERS_ENDPOINT}add-user/`, {
         method: 'POST',
@@ -97,75 +90,54 @@ class App extends Component {
         headers: {'Content-Type': 'application/json'},
       })
     })
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
+    .then(handleNon200Response)
+    .then(currentUser => {
+      currentUser.favorites = [];
+      this.setState({ currentUser });
     })
-    .then(body => {
-      body.favorites = [];
-      this.setState({currentUser: body});
-    })
-    .catch(error => {
-      alert('There was a problem signing you up. Please try again later.');
-      console.log(error);
-    })
+    .catch(handlePromiseFailure)
   }
   
-  getObjects = () => {
-    return fetch(`${apis.MUSEUM_ENDPOINT}object/${this.state.relRef}&offset=${this.state.offset}&has_images=1`,{
+  getObjects = (relRef, offset) => {
+    return fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&offset=${offset}&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(body => body.data)
-    .catch(error => {
-      alert('There was a problem with your request. Please try again later.');
-      console.log(error);
-    });
+    .catch(handlePromiseFailure);
   }
 
   setObjects = (relRef, callback) => {
     fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
     })
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
-    .then(body => {
-      this.setState({ objectsLength: body.data, offset: 0, relRef, objects: [] }, () => {
-        this.getObjects().then(objects => {
-          this.setState({ objects, offset: this.state.offset + 30, hasMore: body.data > this.state.offset + 30 }, () =>{
+    .then(handleNon200Response)
+    .then(({ data: objectsLength }) => {
+      this.getObjects(relRef, 0)
+        .then(objects => {
+          this.setState({
+            relRef,
+            objectsLength,
+            objects,
+            offset: 30,
+            hasMore: objectsLength > 30,
+          }, () => {
             callback && callback();
           });
         })
-      })
     })
-    .catch(error => {
-      alert('There was a problem with your request. Please try again later.');
-      console.log(error);
-    });
+    .catch(handlePromiseFailure);
   }
 
   appendObjects = () => {
-    this.getObjects().then(body => {
-      let offset = this.state.offset;
-      offset += 30;
-      const objects = [...this.state.objects, ...body];
-      this.setState({ objects, offset, hasMore: this.state.objectsLength > offset });
-    })
-    .catch(error => {
-      alert('There was a problem with your request. Please try again later.');
-      console.log(error);
-    });
+    this.getObjects(this.state.relRef, this.state.offset)
+      .then(body => {
+        let offset = this.state.offset;
+        offset += 30;
+        const objects = [...this.state.objects, ...body];
+        this.setState({ objects, offset, hasMore: this.state.objectsLength > offset });
+      })
+      .catch(handlePromiseFailure);
   }
 
   getFavorites = (callback) => {
@@ -173,23 +145,15 @@ class App extends Component {
       return fetch(`${apis.MUSEUM_ENDPOINT}object/${favorite.objectId}`,{
         headers: { 'api_key': apis.MUSEUM_KEY }
       })
-      .then(response => {
-        if (response.status < 200 || response.status >= 300) {
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
+      .then(handleNon200Response)
     });
 
     Promise.all(favorites)
       .then(bodies => {
         const objects = bodies.map(body => body.data);
-        this.setState({ objects, objectsLength: objects.length, offset: 30, hasMore: false  }, callback && callback());
+        this.setState({ objects, hasMore: false }, callback && callback());
       })
-      .catch(error => {
-        alert('There was a problem with your request. Please try again later.');
-        console.log(error);
-      });
+      .catch(handlePromiseFailure);
   }
 
   addFavorite = (objectId) => {
@@ -200,21 +164,13 @@ class App extends Component {
       body: JSON.stringify(favorite),
       headers: {'Content-Type': 'application/json'},
     })
-    .then(response => {
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+    .then(handleNon200Response)
     .then(body => {
       const currentUser = { ...this.state.currentUser };
       currentUser.favorites.push(body);
       this.setState({ currentUser });
     })
-    .catch(error => {
-      alert('There was a problem adding this item to your favorites. Please try again later.');
-      console.log(error)
-    });
+    .catch(handlePromiseFailure);
   }
 
   removeFavorite = objectId => {
@@ -231,10 +187,7 @@ class App extends Component {
         favorites.splice(favorites.indexOf(favorites.find(fav => fav.favoriteId == favoriteId)), 1);
         this.setState({ currentUser});
       })
-      .catch(error => {
-        alert('There was a problem removing this item to your favorites. Please try again later.');
-        console.log(error);
-      });
+      .catch(handlePromiseFailure);
   }
 
   LoginComponent = () =>
@@ -274,7 +227,8 @@ class App extends Component {
         'setObjects',
         'collections',
         'getFavorites',
-        'setDetail'
+        'setDetail',
+        'recommendations'
       )}
     />;
 

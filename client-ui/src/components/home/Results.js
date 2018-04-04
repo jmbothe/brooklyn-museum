@@ -12,7 +12,7 @@ class Results extends Component {
         className="results-container"
         hasMore={this.props.hasMore}
         loadMore={this.props.appendObjects}
-        sizes={[{columns: 5, gutter: 20}]}
+        sizes={[{ columns: 5, gutter: 20 }]}
         pack={true}
       >
         {this.props.children}

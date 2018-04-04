@@ -1,79 +1,12 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { handleNon200Response, handlePromiseFailure } from '../../helpers';
 
 import apis from '../../apis';
 
 import './detail.css';
 
 class ObjectDetail extends Component {
-  state = {
-    recommendations: []
-  }
-
-  componentDidMount() {
-    fetch(`${apis.USERS_ENDPOINT}get-recommendations/${this.props.detail.id}/`)
-      .then(response => { 
-        if (response.status < 200 || response.status >= 300) {
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
-      .then(recIds => {
-        const recPromises = recIds.map(id => {
-          return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
-            headers: { 'api_key': apis.MUSEUM_KEY }
-          }).then(response => {
-            if (response.status < 200 || response.status >= 300) {
-              throw new Error(response.status);
-            }
-            return response.json();
-          })
-        })
-    
-        Promise.all(recPromises).then(bodies => {
-          const recommendations = bodies.map(body => body.data);
-          this.setState({ recommendations })
-        })
-      })
-      .catch(error => {
-        alert('There was a problem with your request. Please try again later.');
-        console.log(error);
-      });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.detail != this.props.detail) {
-      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${this.props.detail.id}/`)
-        .then(response => { 
-          if (response.status < 200 || response.status >= 300) {
-            throw new Error(response.status);
-          }
-          return response.json();
-        })
-        .then(recIds => {
-          const recPromises = recIds.map(id => {
-            return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
-              headers: { 'api_key': apis.MUSEUM_KEY }
-            }).then(response => {
-              if (response.status < 200 || response.status >= 300) {
-                throw new Error(response.status);
-              }
-              return response.json();
-            })
-          })
-      
-          Promise.all(recPromises).then(bodies => {
-            const recommendations = bodies.map(body => body.data);
-            this.setState({ recommendations })
-          })
-        })
-        .catch(error => {
-          alert('There was a problem with your request. Please try again later.');
-          console.log(error);
-        });
-      }
-  }
-
   handleChange = (relRef) => {
     this.props.setObjects(`${relRef}&limit=30`);
   }
@@ -88,6 +21,7 @@ class ObjectDetail extends Component {
 
   render() {
     const detail = this.props.detail;
+    if (Object.keys(detail).length === 0) return <div></div>
 
     const artists = detail.artists.length > 0
       ?  <ul>
@@ -137,6 +71,7 @@ class ObjectDetail extends Component {
 
       const geographies = detail.geographical_locations.length > 0
       ? <ul>
+        <li>Geographies:</li>
           {
             detail.geographical_locations.map(location =>
               <li><Link
@@ -150,11 +85,11 @@ class ObjectDetail extends Component {
         </ul>
       : null;
 
-      const recommendations = this.state.recommendations.length > 0 && this.props.currentUser.favorites.some(fav => fav.objectId == this.props.detail.id)
+      const recommendations = this.props.recommendations.length > 0 && this.props.currentUser.favorites.some(fav => fav.objectId == this.props.detail.id)
         ? <ul>
             <li>Users who liked this also liked:</li>
             {
-              this.state.recommendations.map(recommendation =>
+              this.props.recommendations.map(recommendation =>
                 <li
                     onClick={() => this.props.setDetail(recommendation)}
                   >
@@ -200,10 +135,10 @@ class ObjectDetail extends Component {
               {collections}
               {exhibitions}
               {geographies}
-              <p>{detail.medium}</p>
+              <p>Medium: {detail.medium}</p>
 
               <p>Credit: {detail.credit_line}</p>
-              <p>{detail.museum_location.name}</p>
+              <p>On View: {detail.museum_location.name}</p>
               <p>Dimensions: {detail.dimensions}</p>
             </div>
 

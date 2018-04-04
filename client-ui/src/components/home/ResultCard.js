@@ -5,12 +5,7 @@ import { MUSEUM_IMG_PATH } from '../../apis';
 import React, { Component } from 'react';
 
 class ResultCard extends Component {
-
-  handleClick = () => {
-    this.props.setDetail(this.props.object);
-    this.props.history.push("/detail");
-  }
-
+  
   handleSelect = (e) => {
     const id = this.props.object.id;
 
@@ -41,19 +36,10 @@ class ResultCard extends Component {
         />
 
         <Link
-          onClick={this.handleClick}
+          onClick={() => this.props.setDetail(this.props.object)}
           to={{ pathname: "/detail" }}
         />
-
-        {/* <img
-          src={
-            object.copyright_restricted
-            ? `${MUSEUM_IMG_PATH}_fairuse/${object.primary_image}`
-            : `${MUSEUM_IMG_PATH}2/${object.primary_image}`
-          }
-          alt={object.title}
-          className="result-card" /> */}
-
+      
       </div>
     )
   }
