@@ -6,7 +6,7 @@ import LoginHeader from './LoginHeader';
 import PageHeader from '../PageHeader';
 
 class Login extends Component {
-  state = { loginView: false };
+  state = { loginView: true };
 
   toggleLoginView = boolean => this.setState({ loginView: boolean });
 
@@ -24,7 +24,6 @@ class Login extends Component {
     return (
       <Fragment>
         <PageHeader>
-          <div></div>
         </PageHeader>
         <section className="login-container">
           <LoginHeader 

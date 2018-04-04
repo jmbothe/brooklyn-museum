@@ -35,7 +35,7 @@ class App extends Component {
     .then(body => {
       this.setState({
         collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
-      }, () => this.setObjects('?collection_id=10&limit=30'));
+      }, () => this.setObjects('?collection_id=10&limit=15'));
     })
     .catch(handlePromiseFailure);
   }
@@ -88,32 +88,34 @@ class App extends Component {
   }
 
   setObjects = (relRef, callback) => {
-    fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
-      headers: { 'api_key': apis.MUSEUM_KEY }
+    this.setState({ objects: [] }, () => {
+      fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
+        headers: { 'api_key': apis.MUSEUM_KEY }
+      })
+      .then(handleNon200Response)
+      .then(({ data: objectsLength }) => {
+        this.getObjects(relRef, 0)
+          .then(objects => {
+            this.setState({
+              relRef,
+              objectsLength,
+              objects,
+              offset: 15,
+              hasMore: objectsLength > 15,
+            }, () => {
+              callback && callback();
+            });
+          })
+      })
+      .catch(handlePromiseFailure);
     })
-    .then(handleNon200Response)
-    .then(({ data: objectsLength }) => {
-      this.getObjects(relRef, 0)
-        .then(objects => {
-          this.setState({
-            relRef,
-            objectsLength,
-            objects,
-            offset: 30,
-            hasMore: objectsLength > 30,
-          }, () => {
-            callback && callback();
-          });
-        })
-    })
-    .catch(handlePromiseFailure);
   }
 
   appendObjects = () => {
     this.getObjects(this.state.relRef, this.state.offset)
       .then(body => {
         let offset = this.state.offset;
-        offset += 30;
+        offset += 15;
         const objects = [...this.state.objects, ...body];
         this.setState({ objects, offset, hasMore: this.state.objectsLength > offset });
       })
@@ -171,22 +173,24 @@ class App extends Component {
   }
 
   setDetail = detail => {
-    fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
-      .then(handleNon200Response)
-      .then(recIds => {
-        const recPromises = recIds.map(id => {
-          return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
-            headers: { 'api_key': apis.MUSEUM_KEY }
+    this.setState({detail: {}}, () => {
+      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
+        .then(handleNon200Response)
+        .then(recIds => {
+          const recPromises = recIds.map(id => {
+            return fetch(`${apis.MUSEUM_ENDPOINT}object/${id}`,{
+              headers: { 'api_key': apis.MUSEUM_KEY }
+            })
+            .then(handleNon200Response)
           })
-          .then(handleNon200Response)
+      
+          Promise.all(recPromises).then(bodies => {
+            const recommendations = bodies.map(body => body.data);
+            this.setState({ recommendations, detail })
+          })
         })
-    
-        Promise.all(recPromises).then(bodies => {
-          const recommendations = bodies.map(body => body.data);
-          this.setState({ recommendations, detail })
-        })
+        .catch(handlePromiseFailure);
       })
-      .catch(handlePromiseFailure);
   }
 
   LoginComponent = () =>

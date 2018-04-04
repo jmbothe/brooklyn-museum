@@ -1,11 +1,8 @@
-.tab-fade {
-  opacity: 0.5;
-}
-
 .login-container {
   width: 25%;
-  margin: 10% auto 0;
-  box-shadow: 2px 8px 10px #ccc;
+  margin: 9% auto 0 40%;
+  background-color: rgba(255,255,255,.85);
+  box-shadow: 1px 8px 20px #ccc;
 }
 
 .login-container > header {
@@ -17,14 +14,21 @@
   text-align: center;
   padding: 2%;
   background-color: #00aff0;
-  color: #fff;
+  color: #AFE9FF;
   font-weight: 900;
   border: none;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-radius: 0;
+  outline: none;
+}
+
+.login-container > header button.tab-fade {
+  background-color: #AFE9FF;
+  color: #00aff0;
+  border: 1px solid #f4f5f5;
 }
 
 .login-container > form {
+  border-top: 2px solid #00aff0;
   padding: 5% 10%;
 }
 

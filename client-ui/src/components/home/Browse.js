@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Browse extends Component {
 
   handleChange = (e) => {
-    const relRef = `?collection_id=${e.target.value}&limit=30`;
+    const relRef = `?collection_id=${e.target.value}&limit=15`;
 
     this.props.setObjects(relRef, () => this.props.redirect && this.props.toggleRedirect());
   }

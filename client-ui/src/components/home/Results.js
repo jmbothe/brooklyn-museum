@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import MasonryInfiniteScroller from 'react-masonry-infinite';
+import { withRouter } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import { pickProps } from '../../helpers';
 
@@ -7,7 +7,9 @@ import ResultCard from './ResultCard';
 
 class Results extends Component {
   render() {
-    const loader = <div className="loader">Loading ...</div>;
+    if (this.props.objects.length == 0) return <div className="results-container-loading"></div>;
+
+    const loader = <div className="loader"></div>;
 
     return (
       <InfiniteScroll
@@ -24,4 +26,4 @@ class Results extends Component {
   }
 }
 
-export default Results;
+export default withRouter(Results);

@@ -1,7 +1,8 @@
 .object-detail {
   display: flex;
-  width: 90%;
-  margin: 5% auto;
+  min-height: 100vh;
+  padding: 5%;
+  background: #fff;
 }
 
 .object-detail h3 {
@@ -70,6 +71,11 @@
   font-weight: 900;
 }
 
-.object-detail input[type="checkbox"] {
+.object-detail label {
   float: right;
+  padding: 2% 10%;
+}
+
+.object-detail i {
+  font-size: 3rem;
 }

@@ -8,7 +8,7 @@ import './detail.css';
 
 class ObjectDetail extends Component {
   handleChange = (relRef) => {
-    this.props.setObjects(`${relRef}&limit=30`);
+    this.props.setObjects(`${relRef}&limit=15`);
   }
 
   handleSelect = (e) => {
@@ -21,7 +21,7 @@ class ObjectDetail extends Component {
 
   render() {
     const detail = this.props.detail;
-    if (Object.keys(detail).length === 0) return <div></div>
+    if (Object.keys(detail).length === 0) return <section className="loader"></section>
 
     const artists = detail.artists.length > 0
       ?  <ul>
@@ -143,11 +143,16 @@ class ObjectDetail extends Component {
             </div>
 
             <div>
+            <label for={detail.id}>
               <input
+                id={detail.id}
                 type="checkbox"
                 onChange={this.handleSelect}
                 checked={this.props.currentUser.favorites.some(fav => fav.objectId == detail.id)}
               />
+              <i class="far fa-heart unchecked"></i>
+              <i class="fas fa-heart checked"></i>
+              </label>
 
             {recommendations}
             </div>

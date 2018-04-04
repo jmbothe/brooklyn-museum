@@ -7,7 +7,7 @@ class Search extends Component {
     e.preventDefault();
     e.target.reset();
 
-    const relRef = `?keyword=${this.state.keyword}&limit=30`;
+    const relRef = `?keyword=${this.state.keyword}&limit=15`;
 
     this.props.setObjects(relRef, () => this.props.redirect && this.props.toggleRedirect());
   }

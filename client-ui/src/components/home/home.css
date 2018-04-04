@@ -2,11 +2,21 @@
 RESULTS
 **************************************************** */
 
-.results-container {
+.results-container, .results-container-loading {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  padding: 5%;
+  min-height: 100vh;
+  padding: 5% 5% 0;
+  background: #fff;
+}
+
+.loader {
+  height: 70vh;
+}
+
+.loader, .results-container-loading {
+  background: #fff url('../../loading.gif') no-repeat top;
 }
 
 .results-container div {
@@ -23,11 +33,22 @@ RESULTS
   bottom: 0;
   left: 0;
   right: 0;
+  transition: all 200ms;
 }
 
-.results-container input[type="checkbox"] {
+.results-container a:hover {
+  background-color: rgba(255,255,255, 0.5);
+  transition: all 200ms;
+}
+
+.results-container label {
+  display: block;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
   z-index: 1;
+}
+
+.results-container i {
+  font-size: 1.5rem;
 }

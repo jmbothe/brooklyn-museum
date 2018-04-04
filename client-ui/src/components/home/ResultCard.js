@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { MUSEUM_IMG_PATH } from '../../apis';
 
@@ -29,11 +28,16 @@ class ResultCard extends Component {
     return (
       <div style={style}>
 
-        <input
-          type="checkbox"
-          onChange={this.handleSelect}
-          checked={this.props.currentUser.favorites.some(fav => fav.objectId == object.id)}
-        />
+        <label for={object.id}>
+          <input
+            id={object.id}
+            type="checkbox"
+            onChange={this.handleSelect}
+            checked={this.props.currentUser.favorites.some(fav => fav.objectId == object.id)}
+          />
+          <i class="far fa-heart unchecked"></i>
+          <i class="fas fa-heart checked"></i>
+        </label>
 
         <Link
           onClick={() => this.props.setDetail(this.props.object)}
@@ -45,4 +49,4 @@ class ResultCard extends Component {
   }
 }
  
-export default withRouter(ResultCard);
+export default ResultCard;

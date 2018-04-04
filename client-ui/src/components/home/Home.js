@@ -15,7 +15,6 @@ import './home.css';
 
 class Home extends Component {
   render() {
-
     if (!this.props.currentUser) return <Redirect to="/login" />
 
     const cards = this.props.objects.map(object =>
@@ -44,7 +43,7 @@ class Home extends Component {
             <Search {...pickProps(this.props, 'setObjects')} />
           </nav>
         </PageHeader>
-        <Results {...pickProps({...this, ...this.props}, 'appendObjects', 'hasMore')} >
+        <Results {...pickProps({...this, ...this.props}, 'appendObjects', 'hasMore', 'objects')} >
           {cards}
         </Results>
       </ Fragment>

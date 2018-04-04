@@ -23,7 +23,6 @@ public class User {
     @Column(name = "FULL_NAME")
     private String fullName;
 
-    //    @JsonIgnore
     @OneToMany
     @JoinColumn(name = "USER_ID")
     private List<Favorite> favorites;

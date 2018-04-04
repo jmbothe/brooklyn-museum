@@ -14,7 +14,7 @@ import './detail.css'
 class Detail extends Component {
   state = { redirect: false };
 
-  toggleRedirect = () => this.setState({ redirect: true })
+  toggleRedirect = () => this.setState({ redirect: true });
 
   render() {
     if (this.state.redirect) return <Redirect to="/" />
