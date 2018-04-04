@@ -17,6 +17,7 @@ class Detail extends Component {
   toggleRedirect = () => this.setState({ redirect: true });
 
   render() {
+    if (!this.props.currentUser) return <Redirect to="/login" />
     if (this.state.redirect) return <Redirect to="/" />
 
     return (

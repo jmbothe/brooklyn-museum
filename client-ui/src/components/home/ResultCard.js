@@ -28,15 +28,15 @@ class ResultCard extends Component {
     return (
       <div style={style}>
 
-        <label for={object.id}>
+        <label htmlFor={object.id}>
           <input
             id={object.id}
             type="checkbox"
             onChange={this.handleSelect}
             checked={this.props.currentUser.favorites.some(fav => fav.objectId == object.id)}
           />
-          <i class="far fa-heart unchecked"></i>
-          <i class="fas fa-heart checked"></i>
+          <i className="far fa-heart unchecked"></i>
+          <i className="fas fa-heart checked"></i>
         </label>
 
         <Link

@@ -4,8 +4,8 @@ class Browse extends Component {
 
   handleChange = (e) => {
     const relRef = `?collection_id=${e.target.value}&limit=15`;
-
     this.props.setObjects(relRef, () => this.props.redirect && this.props.toggleRedirect());
+    e.target.value="";
   }
 
   render() {

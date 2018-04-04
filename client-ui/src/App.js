@@ -35,7 +35,7 @@ class App extends Component {
     .then(body => {
       this.setState({
         collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
-      }, () => this.setObjects('?collection_id=10&limit=15'));
+      }, () => this.setObjects('?collection_id=8&limit=15'));
     })
     .catch(handlePromiseFailure);
   }
@@ -123,19 +123,21 @@ class App extends Component {
   }
 
   getFavorites = (callback) => {
-    const favorites = this.state.currentUser.favorites.map(favorite => {
-      return fetch(`${apis.MUSEUM_ENDPOINT}object/${favorite.objectId}`,{
-        headers: { 'api_key': apis.MUSEUM_KEY }
-      })
-      .then(handleNon200Response)
-    });
+    this.setState({ objects: [] }, () => {
+      const favorites = this.state.currentUser.favorites.map(favorite => {
+        return fetch(`${apis.MUSEUM_ENDPOINT}object/${favorite.objectId}`,{
+          headers: { 'api_key': apis.MUSEUM_KEY }
+        })
+        .then(handleNon200Response)
+      });
 
-    Promise.all(favorites)
-      .then(bodies => {
-        const objects = bodies.map(body => body.data);
-        this.setState({ objects, hasMore: false }, callback && callback());
+      Promise.all(favorites)
+        .then(bodies => {
+          const objects = bodies.map(body => body.data);
+          this.setState({ objects, hasMore: false }, callback && callback());
+        })
+        .catch(handlePromiseFailure);
       })
-      .catch(handlePromiseFailure);
   }
 
   addFavorite = (objectId) => {
@@ -173,8 +175,8 @@ class App extends Component {
   }
 
   setDetail = detail => {
-    this.setState({detail: {}}, () => {
-      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/`)
+    this.setState({ detail: {} }, () => {
+      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/${this.state.currentUser.userId}`)
         .then(handleNon200Response)
         .then(recIds => {
           const recPromises = recIds.map(id => {

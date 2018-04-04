@@ -28,7 +28,7 @@ class ObjectDetail extends Component {
             <li>Artists: </li>
             {
               detail.artists.map(artist =>
-                <li><Link 
+                <li key={artist.id}><Link 
                   onClick={() => this.handleChange(`?artist_id=${artist.id}`)}
                   to={{ pathname: "/" }}
                 >{artist.name} {artist.dates}</Link></li>
@@ -42,7 +42,7 @@ class ObjectDetail extends Component {
           <li>Collections: </li>
           {
             detail.collections.map(collection =>
-              <li><Link
+              <li key={collection.id}><Link
                 onClick={() => this.handleChange(`?collection_id=${collection.id}`)}
                 to={{ pathname: "/" }}
               >
@@ -58,7 +58,7 @@ class ObjectDetail extends Component {
           <li>Exhibitions: </li>
           {
             detail.exhibitions.map(exhibition =>
-              <li><Link
+              <li key={exhibition.id}><Link
                 onClick={() => this.handleChange(`?exhibition_id=${exhibition.id}`)}
                 to={{ pathname: "/" }}
               >
@@ -74,7 +74,7 @@ class ObjectDetail extends Component {
         <li>Geographies:</li>
           {
             detail.geographical_locations.map(location =>
-              <li><Link
+              <li key={location.id}><Link
               onClick={() => this.handleChange(`?geographical_location_id=${location.id}`)}
               to={{ pathname: "/" }}
               >
@@ -91,6 +91,7 @@ class ObjectDetail extends Component {
             {
               this.props.recommendations.map(recommendation =>
                 <li
+                    key={recommendation.id}
                     onClick={() => this.props.setDetail(recommendation)}
                   >
                     {recommendation.title}
@@ -135,23 +136,23 @@ class ObjectDetail extends Component {
               {collections}
               {exhibitions}
               {geographies}
-              <p>Medium: {detail.medium}</p>
+              <p><span>Medium: </span>{detail.medium}</p>
 
-              <p>Credit: {detail.credit_line}</p>
-              <p>On View: {detail.museum_location.name}</p>
-              <p>Dimensions: {detail.dimensions}</p>
+              <p><span>Credit: </span>{detail.credit_line}</p>
+              <p><span>On View: </span>{detail.museum_location.name}</p>
+              <p><span>Dimensions: </span>{detail.dimensions}</p>
             </div>
 
             <div>
-            <label for={detail.id}>
+            <label htmlFor={detail.id}>
               <input
                 id={detail.id}
                 type="checkbox"
                 onChange={this.handleSelect}
                 checked={this.props.currentUser.favorites.some(fav => fav.objectId == detail.id)}
               />
-              <i class="far fa-heart unchecked"></i>
-              <i class="fas fa-heart checked"></i>
+              <i className="far fa-heart unchecked"></i>
+              <i className="fas fa-heart checked"></i>
               </label>
 
             {recommendations}

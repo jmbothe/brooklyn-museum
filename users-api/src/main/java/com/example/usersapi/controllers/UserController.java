@@ -84,15 +84,16 @@ public class UserController {
         return userRepository.save(userFromDb);
     }
 
-    @GetMapping("/get-recommendations/{objectId}")
+    @GetMapping("/get-recommendations/{objectId}/{userId}")
     @ResponseBody
-    public List<Long> getRecommendations(@PathVariable Long objectId) throws NotFoundException {
+    public List<Long> getRecommendations(@PathVariable Long objectId, @PathVariable Long userId) throws NotFoundException {
         HashMap<Long, Long> objectIds = new HashMap<>();
 
         Iterable<User> allUsers = userRepository.findAll();
 
         List<User> usersWhoLiked = StreamSupport.stream(allUsers.spliterator(), false)
-            .filter(user -> user.getFavorites().stream().filter(fav -> fav.getObjectId().equals(objectId)).findFirst().isPresent())
+            .filter(user -> user.getFavorites().stream()
+            .filter(fav -> fav.getObjectId().equals(objectId)).findFirst().isPresent() && user.getUserId() != userId)
             .collect(Collectors.toList());
 
         for (User user : usersWhoLiked) {

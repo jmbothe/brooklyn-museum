@@ -5,7 +5,7 @@ RESULTS
 .results-container, .results-container-loading {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  align-content: flex-start;
   min-height: 100vh;
   padding: 5% 5% 0;
   background: #fff;
@@ -19,11 +19,22 @@ RESULTS
   background: #fff url('../../loading.gif') no-repeat top;
 }
 
+.no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  background-color: #fff;
+  font-size: 3rem;
+}
+
 .results-container div {
   position: relative;
   margin: 1%;
   width: 230px;
   height: 230px;
+  box-shadow: 4px 6px 20px #aaa;
+  border: 2px solid #f4f5f5;
 }
 
 .results-container a {

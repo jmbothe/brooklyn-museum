@@ -31,7 +31,11 @@
 
 .object-detail > section:last-of-type > div > div:first-child {
   width: 70%;
-  padding: 0 4%;
+  padding: 0 6%;
+}
+
+.object-detail > section:last-of-type > div > div:first-child span {
+  font-weight: 700;
 }
 
 .object-detail > section:last-of-type > div > div:first-child ul {
