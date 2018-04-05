@@ -405,4 +405,5 @@ public class UserControllerTest {
             .perform(delete("/delete-favorite/6"))
             .andExpect(status().isNotFound());
     }
+
 }

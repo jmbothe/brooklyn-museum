@@ -110,10 +110,10 @@ public class UserController {
         }
 
         return objectIds.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .map(obj -> obj.getKey())
-                .limit(10)
-                .collect(Collectors.toList());
+            .sorted(Map.Entry.comparingByValue())
+            .map(obj -> obj.getKey())
+            .limit(10)
+            .collect(Collectors.toList());
     }
 
     @PostMapping("/add-favorite/")
@@ -131,7 +131,7 @@ public class UserController {
     //EXCEPTION HANDLERS
 
     @ExceptionHandler
-    void handleUserNotFound(
+    void handleNotFound(
             NotFoundException exception,
             HttpServletResponse response) throws IOException {
 

@@ -30,59 +30,59 @@ public class UsersApiFeatureTest {
     @Autowired
     private FavoriteRepository favoriteRepository;
 
-    @Before
-    public void setUp() {
-        userRepository.deleteAll();
-        favoriteRepository.deleteAll();
-    }
-
-    @After
-    public void tearDown() {
-        userRepository.deleteAll();
-        favoriteRepository.deleteAll();
-    }
+//    @Before
+//    public void setUp() {
+//        userRepository.deleteAll();
+//        favoriteRepository.deleteAll();
+//    }
+//
+//    @After
+//    public void tearDown() {
+//        userRepository.deleteAll();
+//        favoriteRepository.deleteAll();
+//    }
 
     @Test
     public void shouldAllowFullCrudForAUser() throws Exception {
 
-        User firstUser = new User(
-            "first@gmail.com",
-            "Joe Schmoe"
-        );
-
-        User secondUser = new User(
-            "second@gmail.com",
-            "Jane Doe"
-        );
-
-        Stream.of(firstUser, secondUser)
-            .forEach(user -> {
-                userRepository.save(user);
-            });
-
-        Favorite firstUserFirstFav = new Favorite(1L, 12345L);
-        Favorite firstUserSecondFav = new Favorite(1L, 56789L);
-        Favorite secondUserFirstFav = new Favorite(2L, 54321L);
-        Favorite secondUserSecondFav = new Favorite(2L, 98765L);
-
-        Stream.of(firstUserFirstFav, firstUserSecondFav, secondUserFirstFav, secondUserSecondFav)
-                .forEach(fav -> {
-                    favoriteRepository.save(fav);
-                });
+//        User firstUser = new User(
+//            "first@gmail.com",
+//            "Joe Schmoe"
+//        );
+//
+//        User secondUser = new User(
+//            "second@gmail.com",
+//            "Jane Doe"
+//        );
+//
+//        Stream.of(firstUser, secondUser)
+//            .forEach(user -> {
+//                userRepository.save(user);
+//            });
+//
+//        Favorite firstUserFirstFav = new Favorite(5L, 12345L);
+//        Favorite firstUserSecondFav = new Favorite(5L, 56789L);
+//        Favorite secondUserFirstFav = new Favorite(6L, 54321L);
+//        Favorite secondUserSecondFav = new Favorite(6L, 98765L);
+//
+//        Stream.of(firstUserFirstFav, firstUserSecondFav, secondUserFirstFav, secondUserSecondFav)
+//                .forEach(fav -> {
+//                    favoriteRepository.save(fav);
+//                });
 
         // Test get all Users
         when()
             .get("http://localhost:8080/users/get-all-users/")
         .then()
             .statusCode(is(200))
-            .and().body(containsString("first@gmail.com"))
-            .and().body(containsString("Jane Doe"))
-                .and().body(containsString("12345"))
-                .and().body(containsString("98765"));
+            .and().body(containsString("jmb@gmail.com"))
+            .and().body(containsString("Jeff Bothe"))
+                .and().body(containsString("1873"))
+                .and().body(containsString("1170"));
 
         // Test creating a User
         User userNotYetInDb = new User(
-            "third@gmail.com",
+            "fifth@gmail.com",
                 "Jim Jones"
         );
 
@@ -93,32 +93,32 @@ public class UsersApiFeatureTest {
             .post("http://localhost:8080/users/add-user/")
         .then()
             .statusCode(is(200))
-            .and().body(containsString("third@gmail.com"));
+            .and().body(containsString("fifth@gmail.com"));
 
         // Test finding one user by ID
         when()
-            .get("http://localhost:8080/users/get-user/" + secondUser.getUserId())
+            .get("http://localhost:8080/users/get-user/1")
         .then()
             .statusCode(is(200))
-            .and().body(containsString("second@gmail.com"))
-            .and().body(containsString("Jane Doe"))
-                .and().body(containsString("54321"));
+            .and().body(containsString("jmb@gmail.com"))
+            .and().body(containsString("Jeff Bothe"));
 
         // Test updating a user
-        secondUser.setFullName("Sally Joe");
+        userRepository.save(userNotYetInDb);
+        userNotYetInDb.setFullName("Sally Joe");
 
         given()
             .contentType(JSON)
-            .and().body(secondUser)
+            .and().body(userNotYetInDb)
         .when()
-            .patch("http://localhost:8080/users/update-user/" + secondUser.getUserId())
+            .patch("http://localhost:8080/users/update-user/" + userNotYetInDb.getUserId())
         .then()
             .statusCode(is(200))
             .and().body(containsString("Sally Joe"));
 
         // Test deleting a user
         when()
-            .delete("http://localhost:8080/users/delete-user/" + secondUser.getUserId())
+            .delete("http://localhost:8080/users/delete-user/" + userNotYetInDb.getUserId())
         .then()
             .statusCode(is(200));
     }
@@ -126,7 +126,7 @@ public class UsersApiFeatureTest {
     @Test
     public void shouldAllowPartialCrudForFavorites() throws Exception {
 
-        Favorite newFav = new Favorite(1L, 2468L);
+        Favorite newFav = new Favorite(1L, 48296L);
         favoriteRepository.save(newFav);
 
         // Test deleting a Favorite
@@ -137,8 +137,7 @@ public class UsersApiFeatureTest {
 
         // Test creating a Favorite
 
-        Favorite favoriteNotYetInDb = new Favorite(1L, 76543L);
-        System.out.println(favoriteNotYetInDb.getFavoriteId());
+        Favorite favoriteNotYetInDb = new Favorite(1L, 48296L);
 
         given()
             .contentType(JSON)
@@ -147,6 +146,16 @@ public class UsersApiFeatureTest {
             .post("http://localhost:8080/users/add-favorite/")
         .then()
             .statusCode(is(200))
-            .and().body(containsString("76543"));
+            .and().body(containsString("48296"));
     }
+
+    @Test
+    public void shouldGetRecommendations() throws Exception {
+        when()
+            .get("http://localhost:8080/users/get-recommendations/1170/1")
+            .then()
+            .statusCode((is(200)))
+            .and().body(containsString("1873"));
+    }
+
 }

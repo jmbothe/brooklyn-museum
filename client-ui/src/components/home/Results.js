@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from './InfiniteScroll';
 import { pickProps } from '../../helpers';
 
 import ResultCard from './ResultCard';
