@@ -24,7 +24,13 @@ class App extends Component {
     currentUser: null,
   }
 
-  logOut = () => this.setState({ currentUser: null });
+  logOut = () => {
+    this.setState({ currentUser: null, displayString: '' }, () => {
+      this.setObjects('', '?collection_id=8&limit=15');
+    })
+  };
+
+  // Get basic data on museum collections and set default browse results
 
   componentDidMount() {
     const collections = fetch(`${apis.MUSEUM_ENDPOINT}collection/`, {
@@ -41,6 +47,8 @@ class App extends Component {
     .catch(handlePromiseFailure);
   }
 
+  // Check user input against firebase project
+
   logIn = user => {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_LOGIN_REF}${apis.F_BASE_KEY}`, {
       method: 'POST',
@@ -53,6 +61,8 @@ class App extends Component {
     .then(currentUser => this.setState({ currentUser }))
     .catch(handlePromiseFailure);
   }
+
+  // signup new user
 
   signUp = newUser => {
     fetch(`${apis.F_BASE_ENDPOINT}${apis.F_BASE_SIGNUP_REF}${apis.F_BASE_KEY}`, {
@@ -79,6 +89,8 @@ class App extends Component {
     .catch(handlePromiseFailure)
   }
   
+  // basic object query against museum API
+
   getObjects = (relRef, offset) => {
     return fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&offset=${offset}&has_images=1`,{
       headers: { 'api_key': apis.MUSEUM_KEY }
@@ -87,6 +99,8 @@ class App extends Component {
     .then(body => body.data)
     .catch(handlePromiseFailure);
   }
+
+  // Respond to user search or browse
 
   setObjects = (displayString, relRef, callback) => {
     this.setState({ objects: [] }, () => {
@@ -113,6 +127,8 @@ class App extends Component {
     })
   }
 
+  // respond to user scrolling through search/browse results
+
   appendObjects = () => {
     this.getObjects(this.state.relRef, this.state.offset)
       .then(body => {
@@ -123,6 +139,8 @@ class App extends Component {
       })
       .catch(handlePromiseFailure);
   }
+
+  // deal with museum API not supporting an array of object IDs in path
 
   getFavorites = (callback) => {
     this.setState({ objects: [] }, () => {
@@ -142,6 +160,8 @@ class App extends Component {
       })
   }
 
+  // respond to user marking on=bject as favorite
+
   addFavorite = (objectId) => {
     const favorite = { userId: this.state.currentUser.userId, objectId };
     
@@ -159,6 +179,8 @@ class App extends Component {
     .catch(handlePromiseFailure);
   }
 
+  // respond to user removing favorite mark from object
+
   removeFavorite = objectId => {
     const currentUser = { ...this.state.currentUser };
     const favorites = currentUser.favorites;
@@ -175,6 +197,8 @@ class App extends Component {
       })
       .catch(handlePromiseFailure);
   }
+
+  // respond to user clicking through from results to object detail view
 
   setDetail = detail => {
     this.setState({ detail: {} }, () => {

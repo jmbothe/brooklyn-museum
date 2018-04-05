@@ -30,45 +30,8 @@ public class UsersApiFeatureTest {
     @Autowired
     private FavoriteRepository favoriteRepository;
 
-//    @Before
-//    public void setUp() {
-//        userRepository.deleteAll();
-//        favoriteRepository.deleteAll();
-//    }
-//
-//    @After
-//    public void tearDown() {
-//        userRepository.deleteAll();
-//        favoriteRepository.deleteAll();
-//    }
-
     @Test
     public void shouldAllowFullCrudForAUser() throws Exception {
-
-//        User firstUser = new User(
-//            "first@gmail.com",
-//            "Joe Schmoe"
-//        );
-//
-//        User secondUser = new User(
-//            "second@gmail.com",
-//            "Jane Doe"
-//        );
-//
-//        Stream.of(firstUser, secondUser)
-//            .forEach(user -> {
-//                userRepository.save(user);
-//            });
-//
-//        Favorite firstUserFirstFav = new Favorite(5L, 12345L);
-//        Favorite firstUserSecondFav = new Favorite(5L, 56789L);
-//        Favorite secondUserFirstFav = new Favorite(6L, 54321L);
-//        Favorite secondUserSecondFav = new Favorite(6L, 98765L);
-//
-//        Stream.of(firstUserFirstFav, firstUserSecondFav, secondUserFirstFav, secondUserSecondFav)
-//                .forEach(fav -> {
-//                    favoriteRepository.save(fav);
-//                });
 
         // Test get all Users
         when()

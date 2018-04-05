@@ -7,8 +7,8 @@ import apis from '../../apis';
 import './detail.css';
 
 class ObjectDetail extends Component {
-  handleChange = (relRef) => {
-    this.props.setObjects(`${relRef}&limit=15`);
+  handleChange = (displayString, relRef) => {
+    this.props.setObjects(displayString, `${relRef}&limit=15`);
   }
 
   handleSelect = (e) => {
@@ -29,7 +29,7 @@ class ObjectDetail extends Component {
             {
               detail.artists.map(artist =>
                 <li key={artist.id}><Link 
-                  onClick={() => this.handleChange(`?artist_id=${artist.id}`)}
+                  onClick={() => this.handleChange(`Displaying results for ${artist.name}`, `?artist_id=${artist.id}`)}
                   to={{ pathname: "/" }}
                 >{artist.name} {artist.dates}</Link></li>
               )
@@ -43,7 +43,7 @@ class ObjectDetail extends Component {
           {
             detail.collections.map(collection =>
               <li key={collection.id}><Link
-                onClick={() => this.handleChange(`?collection_id=${collection.id}`)}
+                onClick={() => this.handleChange(`Displaying results for ${collection.name}`, `?collection_id=${collection.id}`)}
                 to={{ pathname: "/" }}
               >
                 {collection.name}
@@ -59,7 +59,7 @@ class ObjectDetail extends Component {
           {
             detail.exhibitions.map(exhibition =>
               <li key={exhibition.id}><Link
-                onClick={() => this.handleChange(`?exhibition_id=${exhibition.id}`)}
+                onClick={() => this.handleChange(`Displaying results for ${exhibition.title}`, `?exhibition_id=${exhibition.id}`)}
                 to={{ pathname: "/" }}
               >
                 {exhibition.title}
@@ -75,7 +75,7 @@ class ObjectDetail extends Component {
           {
             detail.geographical_locations.map(location =>
               <li key={location.id}><Link
-              onClick={() => this.handleChange(`?geographical_location_id=${location.id}`)}
+              onClick={() => this.handleChange(`Displaying results for ${location.name}`,`?geographical_location_id=${location.id}`)}
               to={{ pathname: "/" }}
               >
                 {location.type}: {location.name}
