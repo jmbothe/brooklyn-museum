@@ -1,13 +1,20 @@
 /* *************************************************
 RESULTS
 **************************************************** */
+#root > p {
+  margin: 0;
+  padding: 2% 6%;
+  background-color: #fff;
+  font-size: 2rem;
+  text-align: center;
+}
 
 .results-container, .results-container-loading {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   min-height: 100vh;
-  padding: 5% 5% 0;
+  padding: 0 5% 5%;
   background: #fff;
 }
 

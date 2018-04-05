@@ -12,6 +12,7 @@ import './components/login/login.css';
 
 class App extends Component {
   state = {
+    displayString: '',
     hasMore: true,
     objectsLength: null,
     collections: [],
@@ -35,7 +36,7 @@ class App extends Component {
     .then(body => {
       this.setState({
         collections: body.data.map(obj => pickProps(obj, 'id', 'name')),
-      }, () => this.setObjects('?collection_id=8&limit=15'));
+      }, () => this.setObjects('', '?collection_id=8&limit=15'));
     })
     .catch(handlePromiseFailure);
   }
@@ -87,7 +88,7 @@ class App extends Component {
     .catch(handlePromiseFailure);
   }
 
-  setObjects = (relRef, callback) => {
+  setObjects = (displayString, relRef, callback) => {
     this.setState({ objects: [] }, () => {
       fetch(`${apis.MUSEUM_ENDPOINT}object/${relRef}&total_count_only=1&has_images=1`,{
         headers: { 'api_key': apis.MUSEUM_KEY }
@@ -97,6 +98,7 @@ class App extends Component {
         this.getObjects(relRef, 0)
           .then(objects => {
             this.setState({
+              displayString,
               relRef,
               objectsLength,
               objects,
@@ -134,7 +136,7 @@ class App extends Component {
       Promise.all(favorites)
         .then(bodies => {
           const objects = bodies.map(body => body.data);
-          this.setState({ objects, hasMore: false }, callback && callback());
+          this.setState({ displayString: 'Displaying your favorites', objects, hasMore: false }, callback && callback());
         })
         .catch(handlePromiseFailure);
       })
@@ -217,7 +219,8 @@ class App extends Component {
         'objects',
         'addFavorite',
         'removeFavorite',
-        'hasMore'
+        'hasMore',
+        'displayString'
       )}
     />;
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import { pickProps } from '../../helpers';
@@ -28,16 +28,20 @@ class Results extends Component {
     const loader = <div className="loader"></div>;
 
     return (
-      <InfiniteScroll
-        pageStart={0}
-        hasMore={this.props.hasMore}
-        loadMore={this.props.appendObjects}
-        loader={loader}
-      >
-        <div className="results-container">
-          {this.props.children}
-        </div>
-      </InfiniteScroll>
+      <Fragment>
+        <p>{this.props.displayString}</p>
+
+        <InfiniteScroll
+          pageStart={0}
+          hasMore={this.props.hasMore}
+          loadMore={this.props.appendObjects}
+          loader={loader}
+        >
+          <div className="results-container">
+            {this.props.children}
+          </div>
+        </InfiniteScroll>
+      </Fragment>
     )
   }
 }

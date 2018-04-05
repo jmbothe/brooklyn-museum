@@ -9,7 +9,11 @@ class Search extends Component {
 
     const relRef = `?keyword=${this.state.keyword}&limit=15`;
 
-    this.props.setObjects(relRef, () => this.props.redirect && this.props.toggleRedirect());
+    this.props.setObjects(
+      `Displaying results for: ${this.state.keyword}`,
+    relRef, 
+    () => this.props.redirect && this.props.toggleRedirect()
+  );
   }
 
   onChange = (e) => this.setState({ keyword: e.target.value });

@@ -14,7 +14,6 @@ import PageHeader from '../PageHeader';
 import './home.css';
 
 class Home extends Component {
-
   componentDidMount() {
     window.scrollTo(0, 0);
   }
@@ -48,7 +47,7 @@ class Home extends Component {
             <Search {...pickProps(this.props, 'setObjects')} />
           </nav>
         </PageHeader>
-        <Results {...pickProps({...this, ...this.props}, 'appendObjects', 'hasMore', 'objects')} >
+        <Results {...pickProps({...this, ...this.props}, 'displayString', 'appendObjects', 'hasMore', 'objects')} >
           {cards}
         </Results>
       </ Fragment>

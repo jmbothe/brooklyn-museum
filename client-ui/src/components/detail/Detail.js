@@ -18,10 +18,6 @@ class Detail extends Component {
     window.scrollTo(0, 0);
   }
 
-  componentDidUpdate() {
-    window.scrollTo(0, 0);
-  }
-
   toggleRedirect = () => this.setState({ redirect: true });
 
   render() {
