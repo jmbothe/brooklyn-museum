@@ -56,7 +56,7 @@ class App extends Component {
       headers: {'Content-Type': 'application/json'},
     })
     .then(handleNon200Response)
-    .then(({ email }) => fetch(`${apis.USERS_ENDPOINT}get-user-by-email/${email}/`))
+    .then(({ email }) => fetch(`${process.env.REACT_APP_HOST}get-user-by-email/${email}/`))
     .then(handleNon200Response)
     .then(currentUser => this.setState({ currentUser }))
     .catch(handlePromiseFailure);
@@ -75,7 +75,7 @@ class App extends Component {
     })
     .then(handleNon200Response)
     .then(body => {
-      return fetch(`${apis.USERS_ENDPOINT}add-user/`, {
+      return fetch(`${process.env.REACT_APP_HOST}add-user/`, {
         method: 'POST',
         body: JSON.stringify({ ...pickProps(newUser, 'fullName', 'email') }),
         headers: {'Content-Type': 'application/json'},
@@ -165,7 +165,7 @@ class App extends Component {
   addFavorite = (objectId) => {
     const favorite = { userId: this.state.currentUser.userId, objectId };
     
-    fetch(`${apis.USERS_ENDPOINT}add-favorite/`, {
+    fetch(`${process.env.REACT_APP_HOST}add-favorite/`, {
       method: 'POST',
       body: JSON.stringify(favorite),
       headers: {'Content-Type': 'application/json'},
@@ -187,7 +187,7 @@ class App extends Component {
     const favoriteId =
       favorites.find(fav => fav.objectId == objectId).favoriteId;
 
-    fetch(`${apis.USERS_ENDPOINT}delete-favorite/${favoriteId}`, { method: 'DELETE' })
+    fetch(`${process.env.REACT_APP_HOST}delete-favorite/${favoriteId}`, { method: 'DELETE' })
       .then(response => {
         if (response.status < 200 || response.status >= 300) {
           throw new Error(response.status);
@@ -202,7 +202,7 @@ class App extends Component {
 
   setDetail = detail => {
     this.setState({ detail: {} }, () => {
-      fetch(`${apis.USERS_ENDPOINT}get-recommendations/${detail.id}/${this.state.currentUser.userId}`)
+      fetch(`${process.env.REACT_APP_HOST}get-recommendations/${detail.id}/${this.state.currentUser.userId}`)
         .then(handleNon200Response)
         .then(recIds => {
           const recPromises = recIds.map(id => {
