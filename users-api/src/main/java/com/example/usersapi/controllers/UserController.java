@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-@CrossOrigin(origins = {"http://localhost:3000, http://brooklyn-museum-collections-explorer.s3-website-us-east-1.amazonaws.com"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://brooklyn-museum-collections-explorer.s3-website-us-east-1.amazonaws.com"})
 @RestController
 public class UserController {
     @Autowired
