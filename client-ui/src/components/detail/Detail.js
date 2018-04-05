@@ -14,6 +14,14 @@ import './detail.css'
 class Detail extends Component {
   state = { redirect: false };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
+  componentDidUpdate() {
+    window.scrollTo(0, 0);
+  }
+
   toggleRedirect = () => this.setState({ redirect: true });
 
   render() {
