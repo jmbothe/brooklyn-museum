@@ -1,8 +1,8 @@
-# The Brooklyn Museum: Collections Browser
+# The Brooklyn Museum Collections Browser
 
-## Client Problem Statement
+## Description
 
-The directors and curators of the Brooklyn Museum's various collections have requested a user interface to be built around the museum's database of collections objects using the associated API. They requested that interface allow users to browse the collection data across broad categories, as well as perform more fine-grained search queries. They also requested that users be able to mark objects as "favorites" for later viewing, and to be able to view object recommendations based on their favorites.
+A user interface to be built around the Brooklyn Museum's database of collections objects. The interface allows users to browse the collection data across broad categories, as well as perform more fine-grained search queries. Users are be able to mark objects as "favorites" for later viewing, and to view object recommendations based on their favorites.
 
 ## Tech Stack
 
@@ -24,10 +24,21 @@ This project depends upon [docker](https://www.docker.com/) and [docker-compose]
 
 ## Features
 
-* Secure sign-up and login with Firebase.
+* Secure sign-up and login with Firebase (although only truly secure if served over HTTPS).
 * Options for browsing and searching the collection's objects.
 * Options to add and remove objects from a persistent list of "user favorites".
 * Detailed views on selected objects, along with high-resolution images.
 
 -------
 
+## Login View
+
+![login](./login.png)
+
+## Home View
+
+![home](./home.png)
+
+## Detail View
+
+![detail](./detail.png)
