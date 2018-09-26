@@ -7,7 +7,14 @@ class LoginForm extends Component {
   
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.submitAction(this.state.user);
+    const body = Object.keys(e.target.elements).reduce((acc, key) => {
+      if (e.target.elements[key].name) {
+        acc[e.target.elements[key].name] = e.target.elements[key].value;
+      }
+      return acc;
+    }, {})
+    console.log(body)
+    this.props.submitAction(body);
     e.target.reset();
   }
 
@@ -22,7 +29,7 @@ class LoginForm extends Component {
     <form className="login-form" onSubmit={this.handleSubmit}>
       {
         this.props.inputs.map((input, index) =>
-          <LoginRow {...input} onChange={this.onChange} key={input.name}/>)
+          <LoginRow user={this.state.user} {...input} onChange={this.onChange} key={input.name + index}/>)
       }
       <div>
         <input type="submit" id="submit" />
