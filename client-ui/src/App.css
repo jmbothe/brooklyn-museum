@@ -40,7 +40,7 @@ button:disabled {
 
 h1 {
   margin: 0;
-  font-size: 6rem;
+  font-size: 5.5rem;
 }
 
 h2 {
@@ -60,7 +60,7 @@ h2 {
 }
 
 #root {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
 }
 
@@ -145,4 +145,44 @@ MAIN HEADER
 
 #root > header form > input[type="submit"] {
   width: 25%;
+}
+
+@media only screen and (max-width: 1024px) {
+  #root > header nav > * {
+    width: 33%;
+  }
+
+  #root > header > div:first-child {
+    width: 100%;
+  }
+  
+  #root > header > div:nth-child(2) {
+    width: 100%;
+    order: -1
+  }
+}
+
+@media only screen and (max-width: 667px) {
+  h1 {
+    font-size: 5rem
+  }
+
+  #root > header nav {
+    flex-direction: column;
+  }
+
+  #root > header nav > * {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  h1 {
+    font-size: 4rem
+  }
+
+  h2 {
+    font-size: 2rem
+  }
 }

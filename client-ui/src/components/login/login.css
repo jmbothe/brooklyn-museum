@@ -1,7 +1,6 @@
 .login-container {
   position: fixed;
   right: 15%;
-  bottom: 15%;
   top: 47%;
   width: 25%;
   background-color: rgba(255,255,255,.85);
@@ -44,4 +43,20 @@
 
 .login-container > form > div:last-child {
   justify-content: flex-end;
+}
+
+@media only screen and (max-width: 1024px) {
+  .login-container {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 667px) {
+  .login-container {
+    position: relative;
+    width: 80%;
+    right: auto;
+    top: auto;
+    margin: 3rem auto;
+  }
 }

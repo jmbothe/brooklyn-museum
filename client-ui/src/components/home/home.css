@@ -38,8 +38,8 @@ RESULTS
 .results-container div {
   position: relative;
   margin: 1%;
-  width: 230px;
-  height: 230px;
+  width: 20vw;
+  height: 20vw;
   box-shadow: 4px 6px 20px #aaa;
   border: 2px solid #f4f5f5;
 }
@@ -69,4 +69,19 @@ RESULTS
 
 .results-container i {
   font-size: 1.5rem;
+}
+
+
+@media only screen and (max-width: 1024px) {
+  .results-container div {
+    width: 28vw;
+    height: 28vw;
+  }
+}
+
+@media only screen and (max-width: 667px) {
+  .results-container div {
+    width: 86vw;
+    height: 86vw;
+  }
 }

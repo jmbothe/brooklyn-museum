@@ -83,3 +83,24 @@
 .object-detail i {
   font-size: 3rem;
 }
+
+@media only screen and (max-width: 1024px) {
+}
+
+@media only screen and (max-width: 667px) {
+  .object-detail {
+    flex-direction: column;
+  }
+
+  .object-detail > section:first-of-type {
+    width: 50%;
+  }
+
+  .object-detail > section:last-of-type {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+
+}
