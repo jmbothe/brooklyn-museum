@@ -14,7 +14,7 @@ class Login extends Component {
     if (this.props.currentUser) return <Redirect to="/" />;
 
     const inputs = this.state.loginView
-      ? [{type: 'email', name: 'email', defaultValue: 'fake@fake.com'}, {type: 'password', name: 'password', defaultValue: 'password'}]
+      ? [{type: 'email', name: 'email', defaultValue: 'fake@user.com'}, {type: 'password', name: 'password', defaultValue: 'password'}]
       : [{type: 'text', name: 'fullName', placeholder: 'Use dummy credentials...'}, {type: 'email', name: 'email', placeholder: 'Use dummy credentials...'}, {type: 'password', name: 'password', placeholder: 'Use dummy credentials...', minlength: 8}];
 
     const submitAction = this.state.loginView

@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "REACT_APP_HOST=http://localhost:8080/users/ react-scripts start",
-    "build": "REACT_APP_HOST=http://ec2-184-73-7-77.compute-1.amazonaws.com:8080/users/ react-scripts build",
+    "build": "REACT_APP_HOST=http://54.145.131.251:8080/users/ react-scripts build",
     "test": "REACT_APP_HOST=http://localhost:8080/users/ react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
