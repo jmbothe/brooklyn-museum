@@ -85,22 +85,6 @@ class ObjectDetail extends Component {
         </ul>
       : null;
 
-      const recommendations = this.props.recommendations.length > 0 && this.props.currentUser.favorites.some(fav => fav.objectId == this.props.detail.id)
-        ? <ul>
-            <li>Users who liked this also liked:</li>
-            {
-              this.props.recommendations.map(recommendation =>
-                <li
-                    key={recommendation.id}
-                    onClick={() => this.props.setDetail(recommendation)}
-                  >
-                    {recommendation.title}
-                </li>
-              )
-            }
-          </ul>
-        : null;
-
     return (
       <section className="object-detail">
       
@@ -149,13 +133,11 @@ class ObjectDetail extends Component {
                 id={detail.id}
                 type="checkbox"
                 onChange={this.handleSelect}
-                checked={this.props.currentUser.favorites.some(fav => fav.objectId == detail.id)}
+                checked={this.props.favorites.some(fav => fav == detail.id)}
               />
               <i className="far fa-heart unchecked"></i>
               <i className="fas fa-heart checked"></i>
               </label>
-
-            {recommendations}
             </div>
 
           </div>

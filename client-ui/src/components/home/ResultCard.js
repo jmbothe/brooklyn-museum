@@ -33,7 +33,7 @@ class ResultCard extends Component {
             id={object.id}
             type="checkbox"
             onChange={this.handleSelect}
-            checked={this.props.currentUser.favorites.some(fav => fav.objectId == object.id)}
+            checked={this.props.favorites.some(fav => fav == object.id)}
           />
           <i className="far fa-heart unchecked"></i>
           <i className="fas fa-heart checked"></i>

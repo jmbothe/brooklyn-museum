@@ -5,7 +5,6 @@ import { pickProps } from '../../helpers';
 import Browse from './Browse';
 import Search from './Search';
 import Favorites from './Favorites';
-import Logout from './Logout';
 import Results from './Results';
 import ResultCard from './ResultCard';
 import PageHeader from '../PageHeader';
@@ -19,8 +18,6 @@ class Home extends Component {
   }
 
   render() {
-    if (!this.props.currentUser) return <Redirect to="/login" />
-
     const cards = this.props.objects.map(object =>
       object.primary_image
       ? <ResultCard
@@ -31,7 +28,7 @@ class Home extends Component {
             'setDetail',
             'addFavorite',
             'removeFavorite',
-            'currentUser'
+            'favorites'
           )}
         />
       : null
@@ -40,7 +37,6 @@ class Home extends Component {
     return (
       <Fragment>
         <PageHeader>
-          <Logout {...pickProps(this.props, 'logOut', 'currentUser')} />
           <nav>
             <Favorites {...pickProps(this.props, 'getFavorites')} />
             <Browse {...pickProps({...this.props, ...this}, 'collections', 'setObjects', 'toggleRedirect')} />
